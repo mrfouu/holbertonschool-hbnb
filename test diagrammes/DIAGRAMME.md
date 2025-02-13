@@ -48,5 +48,5 @@ classDiagram
     User --* Place : "User can have multiple places"
     Place --* Amenity : "Place can have multiple amenities"
     Review --* Place : "Review is associated with one place"
-    Review --* User : "Review is associated with one user"
+    User --* Review : "Review is associated with one user"
 ```	
