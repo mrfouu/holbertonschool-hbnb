@@ -1,3 +1,4 @@
+```mermaid
 classDiagram
     class User {
         - string first_name
@@ -48,3 +49,4 @@ classDiagram
     Place --* Amenity : "Place can have multiple amenities"
     Review --* Place : "Review is associated with one place"
     Review --* User : "Review is associated with one user"
+```	
