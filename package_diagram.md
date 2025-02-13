@@ -3,7 +3,7 @@ classDiagram
 class PresentationLayer {
     <<Interface>>
     +ServiceAPI
-    
+
 
 }
 class BusinessLogicLayer {
@@ -13,7 +13,7 @@ class BusinessLogicLayer {
     +Amenity
 }
 class PersistenceLayer {
-    +DatabaseConnection
+    +DatabaseAccess
     +Repository
 
 }
