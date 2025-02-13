@@ -1,84 +1,50 @@
 classDiagram
     class User {
-        - UUID id
-        - string name
+        - string first_name
+        - string last_name
         - string email
         - string password
-        - datetime created_at
-        - datetime updated_at
-        + authenticate() bool
+        - boolean is_admin
+        + register() void
         + update_profile() void
-        + delete_account() void
-        + get_places() List<Place>
-        + get_reviews() List<Review>
-        + get_bookings() List<Booking>
-        + get_addresses() List<Address>
+        + delete() void
     }
 
     class Place {
-        - UUID id
-        - string name
+        - string title
         - string description
-        - datetime created_at
-        - datetime updated_at
-        + add_amenity() void
-        + remove_amenity() void
-        + get_amenities() List<Amenity>
-        + get_reviews() List<Review>
-        + get_bookings() List<Booking>
-        + get_user() User
-        + get_address() Address
+        - float price
+        - float latitude
+        - float longitude
+        - User owner
+        - List<Amenity> amenities
+        + create() void
+        + update() void
+        + delete() void
+        + list() void
     }
 
     class Review {
-        - UUID id
-        - string text
         - int rating
-        - datetime created_at
-        - datetime updated_at
-        + update_review() void
-        + delete_review() void
-        + get_place() Place
-        + get_user() User
+        - string comment
+        - Place place
+        - User user
+        + create() void
+        + update() void
+        + delete() void
+        + list_by_place() void
     }
 
     class Amenity {
-        - UUID id
         - string name
-        - datetime created_at
-        - datetime updated_at
-        + get_places() List<Place>
-    }
-
-    class Booking {
-        - UUID id
-        - datetime start_date
-        - datetime end_date
-        - int price
-        - datetime created_at
-        - datetime updated_at
-        + update_booking() void
-        + delete_booking() void
-        + get_place() Place
-        + get_user() User
-    }
-
-    class Address {
-        - UUID id
-        - string street
-        - string city
-        - string state
-        - string zip
-        - datetime created_at
-        - datetime updated_at
-        + get_place() Place
+        - string description
+        + create() void
+        + update() void
+        + delete() void
+        + list() void
     }
 
     User --* Place : "User can have multiple places"
     Place --* Amenity : "Place can have multiple amenities"
-    User --* Review : "User can have multiple reviews"
-    Place --* Review : "Place can have multiple reviews"
-    Amenity --* Place : "Amenity can be associated with multiple places"
-    User --* Booking : "User can have multiple bookings"
-    Place --* Booking : "Place can have multiple bookings"
-    Address --* Place : "Address can be associated with one place"
+    Review --* Place : "Review is associated with one place"
+    Review --* User : "Review is associated with one user"
