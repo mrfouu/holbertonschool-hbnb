@@ -1,4 +1,3 @@
-```mermaid
 classDiagram
     class User {
         - string first_name
@@ -25,17 +24,6 @@ classDiagram
         + list() void
     }
 
-    class Review {
-        - int rating
-        - string comment
-        - Place place
-        - User user
-        + create() void
-        + update() void
-        + delete() void
-        + list_by_place() void
-    }
-
     class Amenity {
         - string name
         - string description
@@ -45,8 +33,17 @@ classDiagram
         + list() void
     }
 
+    class Review {
+        - int rating
+        - string comment
+        - User user
+        + create() void
+        + update() void
+        + delete() void
+        + list_by_place() void
+    }
+
     User --* Place : "User can have multiple places"
     Place --* Amenity : "Place can have multiple amenities"
-    Review --* Place : "Review is associated with one place"
-    User --* Review : "Review is associated with one user"
-```	
+    Place --* Review : "Place can have multiple reviews"
+    Review --* User : "Review is associated with one user"
