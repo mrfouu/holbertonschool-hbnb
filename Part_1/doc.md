@@ -190,47 +190,47 @@ The sequence diagram includes the following participants:
 
 ## 🌐 API Calls
 
-The sequence diagram covers the following API calls:
-1️⃣ **Register User**: The process of registering a new user.
-2️⃣ **Create Place**: The process of creating a new place.
-3️⃣ **Submit Review**: The process of submitting a review for a place.
-4️⃣ **Fetch List of Places**: The process of fetching a list of places.
+The sequence diagram covers the following API calls:  
+1️⃣ **Register User**: The process of registering a new user.  
+2️⃣ **Create Place**: The process of creating a new place.  
+3️⃣ **Submit Review**: The process of submitting a review for a place.   
+4️⃣ **Fetch List of Places**: The process of fetching a list of places.   
 
 ### 📝 Register User
 
-1️⃣ **User**: Initiates the API call to register a new user by providing necessary details such as username, email, and password.
-2️⃣ **PresentationLayer**: Receives the request, validates the user input (e.g., checks if the email is in the correct format), and processes the registration request.
-3️⃣ **BusinessLogicLayer**: Validates the business rules (e.g., checks if the username or email already exists) and interacts with the PersistenceLayer to save the user data.
-4️⃣ **PersistenceLayer**: Saves the user data in the database and confirms the save operation.
-5️⃣ **BusinessLogicLayer**: Returns the response (success or failure) to the PresentationLayer.
-6️⃣ **PresentationLayer**: Returns the final response to the user, indicating whether the registration was successful or if there were any errors.
+1️⃣ **User**: Initiates the API call to register a new user by providing necessary details such as username, email, and password.  
+2️⃣ **PresentationLayer**: Receives the request, validates the user input (e.g., checks if the email is in the correct format), and processes the registration request.  
+3️⃣ **BusinessLogicLayer**: Validates the business rules (e.g., checks if the username or email already exists) and interacts with the PersistenceLayer to save the user data.  
+4️⃣ **PersistenceLayer**: Saves the user data in the database and confirms the save operation.  
+5️⃣ **BusinessLogicLayer**: Returns the response (success or failure) to the PresentationLayer.  
+6️⃣ **PresentationLayer**: Returns the final response to the user, indicating whether the registration was successful or if there were any errors.  
 
 ### 🏠 Create Place
 
-1️⃣ **User**: Initiates the API call to create a new place by providing details such as name, location, and description.
-2️⃣ **PresentationLayer**: Receives the request, validates the place data (e.g., checks if all required fields are filled), and processes the creation request.
-3️⃣ **BusinessLogicLayer**: Validates the business rules (e.g., checks if the place name is unique) and interacts with the PersistenceLayer to save the place data.
-4️⃣ **PersistenceLayer**: Saves the place data in the database and confirms the save operation.
-5️⃣ **BusinessLogicLayer**: Returns the response (success or failure) to the PresentationLayer.
-6️⃣ **PresentationLayer**: Returns the final response to the user, indicating whether the place creation was successful or if there were any errors.
+1️⃣ **User**: Initiates the API call to create a new place by providing details such as name, location, and description.  
+2️⃣ **PresentationLayer**: Receives the request, validates the place data (e.g., checks if all required fields are filled), and processes the creation request.  
+3️⃣ **BusinessLogicLayer**: Validates the business rules (e.g., checks if the place name is unique) and interacts with the PersistenceLayer to save the place data.  
+4️⃣ **PersistenceLayer**: Saves the place data in the database and confirms the save operation.  
+5️⃣ **BusinessLogicLayer**: Returns the response (success or failure) to the PresentationLayer.  
+6️⃣ **PresentationLayer**: Returns the final response to the user, indicating whether the place creation was successful or if there were any errors.  
 
 ### ⭐ Submit Review
 
-1️⃣ **User**: Initiates the API call to submit a review for a place by providing details such as rating and comments.
-2️⃣ **PresentationLayer**: Receives the request, validates the review data (e.g., checks if the rating is within the valid range), and processes the submission request.
-3️⃣ **BusinessLogicLayer**: Validates the business rules (e.g., checks if the user has already reviewed the place) and interacts with the PersistenceLayer to save the review data.
-4️⃣ **PersistenceLayer**: Saves the review data in the database and confirms the save operation.
-5️⃣ **BusinessLogicLayer**: Returns the response (success or failure) to the PresentationLayer.
-6️⃣ **PresentationLayer**: Returns the final response to the user, indicating whether the review submission was successful or if there were any errors.
+1️⃣ **User**: Initiates the API call to submit a review for a place by providing details such as rating and comments.  
+2️⃣ **PresentationLayer**: Receives the request, validates the review data (e.g., checks if the rating is within the valid range), and processes the submission request.  
+3️⃣ **BusinessLogicLayer**: Validates the business rules (e.g., checks if the user has already reviewed the place) and interacts with the PersistenceLayer to save the review data.  
+4️⃣ **PersistenceLayer**: Saves the review data in the database and confirms the save operation.  
+5️⃣ **BusinessLogicLayer**: Returns the response (success or failure) to the PresentationLayer.  
+6️⃣ **PresentationLayer**: Returns the final response to the user, indicating whether the review submission was successful or if there were any errors.  
 
 ### 📋 Fetch List of Places
 
-1️⃣ **User**: Initiates the API call to fetch a list of places.
-2️⃣ **PresentationLayer**: Receives the request and processes the fetch request.
-3️⃣ **BusinessLogicLayer**: Interacts with the PersistenceLayer to retrieve the place data from the database.
-4️⃣ **PersistenceLayer**: Retrieves the place data and returns it to the BusinessLogicLayer.
-5️⃣ **BusinessLogicLayer**: Returns the list of places to the PresentationLayer.
-6️⃣ **PresentationLayer**: Returns the list of places to the user, providing the requested data.
+1️⃣ **User**: Initiates the API call to fetch a list of places.  
+2️⃣ **PresentationLayer**: Receives the request and processes the fetch request.  
+3️⃣ **BusinessLogicLayer**: Interacts with the PersistenceLayer to retrieve the place data from the database.  
+4️⃣ **PersistenceLayer**: Retrieves the place data and returns it to the BusinessLogicLayer.  
+5️⃣ **BusinessLogicLayer**: Returns the list of places to the PresentationLayer.  
+6️⃣ **PresentationLayer**: Returns the list of places to the user, providing the requested data.  
 
 ## 📜 Detailed Sequence Diagram
 
