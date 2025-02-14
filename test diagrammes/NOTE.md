@@ -160,6 +160,6 @@ classDiagram
 ### **Conclusion**
 
 Ce diagramme de classes fournit une base solide pour implémenter la logique métier du projet HBnB. Il garantit une structure claire, extensible et en accord avec les bonnes pratiques de conception.  
-Les relations bien définies facilitent la navigation entre les entités, tandis que les méthodes CRUD permettent une gestion simple des données.
+Les relations bien définies facilitent la navigation entre les entités.
 
 by: Bryan Weinegaessel
