@@ -1,14 +1,12 @@
 #!/usr/bin/python3
 
 from .base_model import BaseModel
-from .place import Place
-import uuid
-from datetime import datetime
 import re
 
 
 class User(BaseModel):
     def __init__(self, first_name, last_name, email, is_admin=False):
+        super().__init__()
         self.firstname = first_name
         self.lastname = last_name
         self.email = email
@@ -62,9 +60,3 @@ class User(BaseModel):
         if not isinstance(value, bool):
             raise TypeError('user must be an admin')
         self.is_admin = value
-
-    def add_place(self, place):
-        """Add a place to the user's list of places"""
-        if not isinstance(place, Place):
-            raise TypeError('place must be an instance of the Place class')
-        self.places.append(place)
