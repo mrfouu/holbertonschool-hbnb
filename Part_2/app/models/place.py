@@ -4,7 +4,6 @@ from app.models.base_model import BaseModel
 from .user import User
 
 
-
 class Place(BaseModel):
     def __init__(self, title, description, price, latitude, longitude, owner):
         super().__init__()
@@ -20,7 +19,7 @@ class Place(BaseModel):
     @property
     def title(self):
         return self.title
-    
+
     @title.setter
     def title(self, value):
         if value is None or not isinstance(value, str):
@@ -32,7 +31,7 @@ class Place(BaseModel):
     @property
     def description(self):
         return self.description
-    
+
     @description.setter
     def description(self, value):
         if value is None or not isinstance(value, str):
@@ -42,7 +41,7 @@ class Place(BaseModel):
     @property
     def price(self):
         return self.price
-    
+
     @price.setter
     def price(self, value):
         if value is None or not isinstance(value, float):
@@ -54,7 +53,7 @@ class Place(BaseModel):
     @property
     def latitude(self):
         return self.latitude
-    
+
     @latitude.setter
     def latitude(self, value):
         if value is None or not isinstance(value, float):
@@ -62,11 +61,11 @@ class Place(BaseModel):
         if value < -90 or value > 90:
             raise ValueError('latitude must be between -90 and 90')
         self.latitude = value
-    
+
     @property
     def longitude(self):
         return self.longitude
-    
+
     @longitude.setter
     def longitude(self, value):
         if value is None or not isinstance(value, float):
@@ -78,7 +77,7 @@ class Place(BaseModel):
     @property
     def owner(self):
         return self.owner
-    
+
     @owner.setter
     def owner(self, owner):
         if owner is None or not isinstance(owner, User):
