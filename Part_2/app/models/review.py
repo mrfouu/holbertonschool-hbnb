@@ -1,10 +1,13 @@
 #!/usr/bin/python3
 
 from app.models.base_model import BaseModel
+import re
+from .user import User
+from .place import Place
 
 
 class Review(BaseModel):
-    def __init__(self, place_id, user_id, text, rating):
+    def __init__(self, place, user, text, rating):
         """
         Initialize a new Review instance.
         
@@ -15,23 +18,23 @@ class Review(BaseModel):
             rating (int): The rating of the review.
         """
         super().__init__()
-        self.place_id = place_id
-        self.user_id = user_id
-        self.text = text
-        self.rating = rating
+        self._place = place
+        self._user = user
+        self._text = text
+        self._rating = rating
 
     @property
-    def place_id(self):
+    def place(self):
         """
         Get the place_id of the review.
         
         Returns:
             str: The ID of the place being reviewed.
         """
-        return self._place_id
+        return self._place
 
-    @place_id.setter
-    def place_id(self, value):
+    @place.setter
+    def place(self, value):
         """
         Set the place_id of the review.
         
@@ -43,20 +46,20 @@ class Review(BaseModel):
         """
         if value is None or not isinstance(value, str):
             raise TypeError('place_id must be a non-empty string')
-        self._place_id = value
+        self._place= value
 
     @property
-    def user_id(self):
+    def user(self):
         """
         Get the user_id of the review.
         
         Returns:
             str: The ID of the user writing the review.
         """
-        return self._user_id
+        return self._user
 
-    @user_id.setter
-    def user_id(self, value):
+    @user.setter
+    def user(self, value):
         """
         Set the user_id of the review.
         
@@ -68,7 +71,7 @@ class Review(BaseModel):
         """
         if value is None or not isinstance(value, str):
             raise TypeError('user_id must be a non-empty string')
-        self._user_id = value
+        self._user = value
 
     @property
     def text(self):
