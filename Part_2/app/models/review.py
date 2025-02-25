@@ -1,14 +1,10 @@
 #!/usr/bin/python3
 
 from app.models.base_model import BaseModel
-from app.models.place import Place
-import uuid
-from datetime import datetime
-import re
 
 
 class Review(BaseModel):
-    def __init__(self, place_id, user_id, text):
+    def __init__(self, place_id, user_id, text, rating):
         """
         Initialize a new Review instance.
         
@@ -16,7 +12,9 @@ class Review(BaseModel):
             place_id (str): The ID of the place being reviewed.
             user_id (str): The ID of the user writing the review.
             text (str): The text content of the review.
+            rating (int): The rating of the review.
         """
+        super().__init__()
         self.place_id = place_id
         self.user_id = user_id
         self.text = text
@@ -30,7 +28,7 @@ class Review(BaseModel):
         Returns:
             str: The ID of the place being reviewed.
         """
-        return self.place_id
+        return self._place_id
 
     @place_id.setter
     def place_id(self, value):
@@ -45,7 +43,7 @@ class Review(BaseModel):
         """
         if value is None or not isinstance(value, str):
             raise TypeError('place_id must be a non-empty string')
-        self.place_id = value
+        self._place_id = value
 
     @property
     def user_id(self):
@@ -55,7 +53,7 @@ class Review(BaseModel):
         Returns:
             str: The ID of the user writing the review.
         """
-        return self.user_id
+        return self._user_id
 
     @user_id.setter
     def user_id(self, value):
@@ -70,7 +68,7 @@ class Review(BaseModel):
         """
         if value is None or not isinstance(value, str):
             raise TypeError('user_id must be a non-empty string')
-        self.user_id = value
+        self._user_id = value
 
     @property
     def text(self):
@@ -80,7 +78,7 @@ class Review(BaseModel):
         Returns:
             str: The text content of the review.
         """
-        return self.text
+        return self._text
 
     @text.setter
     def text(self, value):
@@ -95,7 +93,7 @@ class Review(BaseModel):
         """
         if value is None or not isinstance(value, str):
             raise TypeError('text must be a non-empty string')
-        self.text = value
+        self._text = value
 
     @property
     def rating(self):
@@ -105,7 +103,7 @@ class Review(BaseModel):
         Returns:
             int: The rating of the review.
         """
-        return self.rating
+        return self._rating
 
     @rating.setter
     def rating(self, value):
@@ -123,4 +121,4 @@ class Review(BaseModel):
             raise TypeError('rating must be an integer')
         if value < 0 or value > 5:
             raise ValueError('rating must be between 0 and 5')
-        self.rating = value
+        self._rating = value
