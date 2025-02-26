@@ -8,6 +8,7 @@ amenity_model = api.model('Amenity', {
     'name': fields.String(required=True, description='Name of the amenity')
 })
 
+
 @api.route('/')
 class AmenityList(Resource):
     @api.expect(amenity_model)
@@ -24,6 +25,7 @@ class AmenityList(Resource):
         """Retrieve a list of all amenities"""
         ameneties = facade.get_all_amenities()
         return {'amenities': ameneties}, 200
+
 
 @api.route('/<amenity_id>')
 class AmenityResource(Resource):
