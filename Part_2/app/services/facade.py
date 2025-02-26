@@ -12,6 +12,22 @@ class HBnBFacade:
         # Logic will be implemented in later tasks
         pass
 
+    def get_user(self, user_id):
+        # Logic will be implemented in later tasks
+        pass
+
+    def get_user_by_email(self, email):
+        # Logic will be implemented in later tasks
+        pass
+
+    def get_all_users(self):    
+        # Logic will be implemented in later tasks
+        pass
+    
+    def update_user(self, user_id, user_data):
+        # Logic will be implemented in later tasks
+        pass
+
     # Placeholder method for fetching a place by ID
     def get_place(self, place_id):
         # Logic will be implemented in later tasks
