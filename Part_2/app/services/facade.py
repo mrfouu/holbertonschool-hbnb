@@ -32,6 +32,23 @@ class HBnBFacade:
     def get_place(self, place_id):
         # Logic will be implemented in later tasks
         pass
+
+    def get_all_places(self):
+        # Logic will be implemented in later tasks
+        pass
+
+    def create_place(self, place_data):
+        # Placeholder for logic to create a place
+        pass
+
+    def get_all_places(self):
+        # Placeholder for logic to retrieve all places
+        pass
+
+    def update_place(self, place_id, place_data):
+        # Placeholder for logic to update a place
+        pass
+
     #amenities
 
     def create_amenity(self, amenity_data):
