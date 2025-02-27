@@ -1,4 +1,4 @@
-from Part_2.app.services import create_app
+from Part_2.app import create_app
 
 app = create_app()
 
