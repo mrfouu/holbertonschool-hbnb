@@ -5,7 +5,7 @@ __pycache__/
 *.pyd
 
 # Environnements virtuels
-LoL/
+venv/
 .env
 
 # Fichiers de configuration sensibles
