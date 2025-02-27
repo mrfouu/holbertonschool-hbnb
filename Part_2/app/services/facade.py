@@ -1,5 +1,5 @@
 from app.persistence.repository import InMemoryRepository
-
+from app.models.user import User
 
 class HBnBFacade:
     def __init__(self):
@@ -10,8 +10,9 @@ class HBnBFacade:
 
     # Placeholder method for creating a user
     def create_user(self, user_data):
-        # Logic will be implemented in later tasks
-        pass
+        user = User(**user_data)
+        self.user_repo.add(user)
+        return user
 
     def get_user(self, user_id):
         return self.user_repo.get(user_id)
@@ -23,8 +24,13 @@ class HBnBFacade:
         return self.user_repo.get_all()
 
     def update_user(self, user_id, user_data):
-        # Logic will be implemented in later tasks
-        pass
+        user = self.user_repo.get(user_id)
+        if not user:
+            return None
+        for key, value in user_data.items():
+            if hasattr(user, key):
+                setattr(user, key, value)
+        return user
 
     # Placeholder method for fetching a place by ID
     def get_place(self, place_id):
@@ -102,6 +108,6 @@ class HBnBFacade:
 
         if review:
             self.review_repo.delete(review_id)
-            return {message: 'Review deleted successfully'}, 200
+            return {'message': 'Review deleted successfully'}, 200
         else:
-            return {message: 'Review not found'}, 404
+            return {'message': 'Review not found'}, 404
