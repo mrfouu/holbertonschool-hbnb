@@ -19,15 +19,20 @@ class AmenityList(Resource):
     def post(self):
         """Register a new amenity"""
         data_ameneties = api.payload
-        facade.create_amenity(data_ameneties)
-        return {'message': 'Amenity created successfully'}, 201
+        if not data_ameneties:
+            return {'message': 'Invalid input data'}, 400
+        
+        new_amenities = facade.create_amenity(data_ameneties)
+        return {'id': new_amenities.id, 'name': new_amenities.name}, 201
 
     @api.response(200, 'List of amenities retrieved successfully')
     def get(self):
         """Retrieve a list of all amenities"""
         ameneties = facade.get_all_amenities()
-        return {'amenities': ameneties}, 200
-
+        return {'ameneties':[{'id': ameneties.id,
+                              'name': ameneties.name
+                              }for ameneties in ameneties]}, 200
+    
 
 @api.route('/<amenity_id>')
 class AmenityResource(Resource):
@@ -35,10 +40,10 @@ class AmenityResource(Resource):
     @api.response(404, 'Amenity not found')
     def get(self, amenity_id):
         """Get amenity details by ID"""
-        ameneties = facade.get_amenity_by_id(amenity_id)
-        if not ameneties:
+        ameneties_data = facade.get_amenity(amenity_id)
+        if not ameneties_data:
             return {'error': 'Amenity not found'}, 404
-        return {'amenity': ameneties}, 200
+        return {'id': ameneties_data.id, 'name': ameneties_data.name}, 200
 
     @api.expect(amenity_model)
     @api.response(200, 'Amenity updated successfully')
@@ -46,10 +51,14 @@ class AmenityResource(Resource):
     @api.response(400, 'Invalid input data')
     def put(self, amenity_id):
         """Update an amenity's information"""
-        data_ameneties = api.payload
-        ameneties = facade.update_amenity(amenity_id, data_ameneties)
-
-        if not ameneties:
-            return {'error': 'Amenity not found'}, 404
-
-        return {'amenity': ameneties}, 200
+        amenity_data = api.payload
+        
+        if not amenity_data:
+            return {'message': 'Invalid input data'}, 400
+        
+        updated_amenity = facade.update_amenity(amenity_id, amenity_data)
+        if not updated_amenity:
+            return {'message': 'Amenity not found'}, 404
+        
+        return {'id': updated_amenity.id, 'name': updated_amenity.name}, 200
+    
