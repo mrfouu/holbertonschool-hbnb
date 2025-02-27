@@ -1,25 +1,27 @@
-# Fichiers et dossiers liés aux environnements virtuels
+# Environnements virtuels
 venv/
 .env/
 .venv/
-LoL/
+env/
 ENV/
+LoL/
+
+# Caches et fichiers compilés Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 
-# Fichiers de configuration et de dépendances locales
-*.en
+# Configurations locales
+*.env
 .env.local
+.env.*.local
+.env.test
 *.ini
 *.cfg
 *.toml
-Pipfile
-Pipfile.lock
-poetry.lock
 
-# Dossiers de logs et fichiers temporaires
+# Logs et fichiers temporaires
 logs/
 *.log
 *.tmp
@@ -33,11 +35,16 @@ logs/
 *.sublime-workspace
 *.sublime-project
 
-# Fichiers de système d'exploitation
+# Fichiers système
 .DS_Store
 Thumbs.db
 desktop.ini
 
+# Dossiers de build et de distribution
+build/
+dist/
+*.egg-info/
+.eggs/
 
 # Caches et fichiers temporaires de Python
 .pytest_cache/
@@ -52,3 +59,25 @@ test-results/
 nosetests.xml
 coverage/
 htmlcov/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Docker
+docker-compose.override.yml
+
+# Clés et secrets sensibles
+secrets.json
+private.key
+*.pem
+
+# Frameworks spécifiques
+# Flask/Django
+instance/
+*.sqlite3
+db.sqlite3
+
+# Next.js ou builds statiques
+.next/
+out/
+.gitignore
