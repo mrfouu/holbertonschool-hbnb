@@ -40,18 +40,6 @@ class PlaceList(Resource):
 
         if not place_data:
             return {'message': 'Invalid input data'}, 400
-        if not place_data['title']:
-            return {'message': 'Title is required'}, 400
-        if not place_data['price']:
-            return {'message': 'Price is required'}, 400
-        if not place_data['latitude']:
-            return {'message': 'Latitude is required'}, 400
-        if not place_data['longitude']:
-            return {'message': 'Longitude is required'}, 400
-        if not place_data['owner_id']:
-            return {'message': 'Owner ID is required'}, 400
-        if not place_data['amenities']:
-            return {'message': 'Amenities are required'}, 400
 
         new_place = facade.create_place(place_data)
         return {
@@ -62,7 +50,6 @@ class PlaceList(Resource):
                     "latitude": new_place.latitude,
                     "longitude": new_place.longitude,
                     "owner_id": new_place.owner_id,
-                    "amenities": new_place.amenities
                 }, 201
 
     @api.response(200, 'List of places retrieved successfully')
@@ -78,7 +65,7 @@ class PlaceList(Resource):
                             'owner_id': place.owner_id,
                             'amenities': [{'id': amenity.id,
                                         'name': amenity.name
-                                        } for amenity in place.amenities],
+                                        } for amenity in place._amenities],
                             } for place in places]}, 200
 
 @api.route('/<place_id>')
@@ -100,7 +87,7 @@ class PlaceResource(Resource):
                     "latitude": place_data.latitude,
                     "longitude": place_data.longitude,
                     "owner_id": place_data.owner_id,
-                    "amenities": place_data.amenities
+                    "amenities": place_data._amenities
                 }, 200
 
     @api.expect(place_model)
@@ -126,5 +113,5 @@ class PlaceResource(Resource):
                     "latitude": updated_place.latitude,
                     "longitude": updated_place.longitude,
                     "owner_id": updated_place.owner_id,
-                    "amenities": updated_place.amenities
+                    "amenities": updated_place._amenities
                 }, 200
