@@ -110,6 +110,10 @@ class PlaceResource(Resource):
     def put(self, place_id):
         """Update a place's information"""
         place_data = api.payload
+        
+        if not place_data:
+            return {'message': 'Invalid input data'}, 400
+        
         updated_place = facade.update_place(place_id, place_data)
 
         if not updated_place:
