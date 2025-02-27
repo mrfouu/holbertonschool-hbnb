@@ -1,5 +1,8 @@
 from app.persistence.repository import InMemoryRepository
-from app.models import User, Place, Review, Amenity
+from app.models.user import User
+from app.models.place import Place
+from app.models.review import Review
+from app.models.amenity import Amenity
 
 
 
@@ -28,9 +31,16 @@ class HBnBFacade:
     def update_user(self, user_id, user_data):
         # Logic will be implemented in later tasks
         user = self.user_repo.update(user_id)
-        
         if not user:
-            raise ValueError(f"No user found with ID {user_id}.")
+            return None
+        if 'first_name' in user_data:
+            user.first_name = user_data['first_name']
+        if 'last_name' in user_data:
+            user.last_name = user_data['last_name']
+            if 'email' in user_data:
+                user.email = user_data['email']
+
+        self.user_repo.update(user_id, user)
         return user
 
     # Placeholder method for fetching a place by ID
