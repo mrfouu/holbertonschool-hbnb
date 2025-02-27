@@ -1,13 +1,10 @@
 #!/usr/bin/python3
 
 from app.models.base_model import BaseModel
-import re
-from .user import User
-from .place import Place
 
 
 class Review(BaseModel):
-    def __init__(self, place, user, text, rating):
+    def __init__(self, place_id, user_id, text, rating):
         """
         Initialize a new Review instance.
         
@@ -18,23 +15,23 @@ class Review(BaseModel):
             rating (int): The rating of the review.
         """
         super().__init__()
-        self._place = place
-        self._user = user
+        self._place_id = place_id
+        self._user_id = user_id
         self._text = text
         self._rating = rating
 
     @property
-    def place(self):
+    def place_id(self):
         """
         Get the place_id of the review.
         
         Returns:
             str: The ID of the place being reviewed.
         """
-        return self._place
+        return self._place_id
 
-    @place.setter
-    def place(self, value):
+    @place_id.setter
+    def place_id(self, value):
         """
         Set the place_id of the review.
         
@@ -46,20 +43,20 @@ class Review(BaseModel):
         """
         if value is None or not isinstance(value, str):
             raise TypeError('place_id must be a non-empty string')
-        self._place= value
+        self._place_id= value
 
     @property
-    def user(self):
+    def user_id(self):
         """
         Get the user_id of the review.
         
         Returns:
             str: The ID of the user writing the review.
         """
-        return self._user
+        return self._user_id
 
-    @user.setter
-    def user(self, value):
+    @user_id.setter
+    def user_id(self, value):
         """
         Set the user_id of the review.
         
@@ -71,7 +68,7 @@ class Review(BaseModel):
         """
         if value is None or not isinstance(value, str):
             raise TypeError('user_id must be a non-empty string')
-        self._user = value
+        self._user_id = value
 
     @property
     def text(self):
