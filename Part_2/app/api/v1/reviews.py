@@ -1,8 +1,10 @@
 from flask_restx import Namespace, Resource, fields
-from app.services import facade
+from app.services.facade import HBnBFacade
 
 
 api = Namespace('reviews', description='Review operations')
+
+facade = HBnBFacade()
 
 # Define the review model for input validation and documentation
 review_model = api.model('Review', {
@@ -11,8 +13,6 @@ review_model = api.model('Review', {
     'user_id': fields.String(required=True, description='ID of the user'),
     'place_id': fields.String(required=True, description='ID of the place')
 })
-
-facade = facade.HBnBFacade()
 
 
 @api.route('/')
