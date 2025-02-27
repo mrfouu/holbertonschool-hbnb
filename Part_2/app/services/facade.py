@@ -11,7 +11,8 @@ class HBnBFacade:
     # Placeholder method for creating a user
     def create_user(self, user_data):
         # Logic will be implemented in later tasks
-        pass
+        user = self.user_repo.add(user_data)
+        return user
 
     def get_user(self, user_id):
         return self.user_repo.get(user_id)
@@ -24,7 +25,7 @@ class HBnBFacade:
 
     def update_user(self, user_id, user_data):
         # Logic will be implemented in later tasks
-        pass
+        user = self.user_repo.update(user_id, user_data)
 
     # Placeholder method for fetching a place by ID
     def get_place(self, place_id):
