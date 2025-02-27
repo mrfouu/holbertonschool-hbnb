@@ -1,6 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
 
+
 api = Namespace('reviews', description='Review operations')
 
 # Define the review model for input validation and documentation
@@ -11,7 +12,7 @@ review_model = api.model('Review', {
     'place_id': fields.String(required=True, description='ID of the place')
 })
 
-facade = HBnBFacade()
+facade = facade.HBnBFacade()
 
 
 @api.route('/')
@@ -24,7 +25,7 @@ class ReviewList(Resource):
         review_data = api.payload
 
         if ('user_id' not in review_data or 'place_id' not in review_data or 'rating' not in review_data or 'text' not in review_data):
-            return {message: 'Missing required fields'}, 400
+            return {'message': 'Missing required fields'}, 400
 
         new_review = facade.create_review(review_data)
         return {'id': new_review.id,
@@ -41,7 +42,7 @@ class ReviewList(Resource):
                             'text': review.text,
                             'rating': review.rating,
                             'user_id': review.user_id,
-                            'place_id': review.place_id} for review in reviews]}, 200
+                            'place_id': review.place_id} for review in review]}, 200
 
 
 @api.route('/<review_id>')
@@ -70,7 +71,7 @@ class ReviewResource(Resource):
         if not review:
             return {'error': 'Review not found'}, 404
         if ('user_id' not in review_data or 'place_id' not in review_data or 'rating' not in review_data or 'text' not in review_data):
-            return {message: 'Missing required fields'}, 400
+            return {'message': 'Missing required fields'}, 400
 
         updated_review = facade.update_review(review_id, review_data)
         return {'id': updated_review.id,

@@ -91,6 +91,6 @@ class HBnBFacade:
 
         if review:
             self.review_repo.delete(review_id)
-            return {message: 'Review deleted successfully'}, 200
+            return {'message': 'Review deleted successfully'}, 200
         else:
-            return {message: 'Review not found'}, 404
+            return {'message': 'Review not found'}, 404
