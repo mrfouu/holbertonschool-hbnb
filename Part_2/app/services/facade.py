@@ -30,24 +30,48 @@ class HBnBFacade:
     # Placeholder method for fetching a place by ID
     def get_place(self, place_id):
         # Logic will be implemented in later tasks
-        pass
-    # amenities
+        return self.place_repo.get_places(place_id)
 
+    def get_all_places(self):
+        # Logic will be implemented in later tasks
+        return self.place_repo.get_all_places()
+
+    def create_place(self, place_data):
+        # Placeholder for logic to create a place-l "é "
+        return self.place_repo.create_place(place_data)
+
+
+    def update_place(self, place_id, place_data):
+        # Placeholder for logic to update a place
+        return self.place_repo.update_place(place_id, place_data)
+
+    #amenities
     def create_amenity(self, amenity_data):
-        # Placeholder for logic to create an amenity
-        pass
+        name = amenity_data.get('name')
+        if not name or len(name) > 50:
+            raise ValueError("Amenity name is required and must be less than or equal to 50 characters.")
+
+        new_amenity = {'name': name}
+        return self.amenity_repo.create(new_amenity)
 
     def get_amenity(self, amenity_id):
-        # Placeholder for logic to retrieve an amenity by ID
-        pass
+        return self.amenity_repo.get_by_id(amenity_id)
 
     def get_all_amenities(self):
-        # Placeholder for logic to retrieve all amenities
-        pass
+        return self.amenity_repo.get_all()
 
     def update_amenity(self, amenity_id, amenity_data):
-        # Placeholder for logic to update an amenity
-        pass
+        name = amenity_data.get('name')
+        if not name or len(name) > 50:
+            raise ValueError("Amenity name is required and must be less than or equal to 50 characters.")
+
+        updated_amenity = self.amenity_repo.update(amenity_id, {'name': name})
+        if not updated_amenity:
+            raise ValueError(f"No amenity found with ID {amenity_id}.")
+        return updated_amenity
+
+    def delete_amenity(self, amenity_id):
+        return self.amenity_repo.delete(amenity_id)
 
     def create_review(self, review_data):
         review = self.review_repo.add(review_data)
