@@ -1,10 +1,13 @@
 #!/usr/bin/python3
 
 from flask_restx import Namespace, Resource, fields
-from app.services import facade
-import re
+from app.services.facade import HBnBFacade
+from flask import jsonify, request
 
-api = Namespace('users', description='User operations')
+
+api = Namespace('users', description='User related operations')
+
+facade = HBnBFacade()
 
 # Define the user model for input validation and documentation
 user_model = api.model('User', {
@@ -26,7 +29,7 @@ class UserList(Resource):
     def post(self):
         """Register a new user"""
         user_data = api.payload
-        if not user_data or not isinstance(user_data, dict):
+        if not user_data:
             return {'error': 'User data is required'}, 400
 
         existing_user = facade.get_user_by_email(user_data['email'])
@@ -34,11 +37,6 @@ class UserList(Resource):
             return {'error': 'Email already registered'}, 400
         if not user_data['email']:
             return {'error': 'Email is required'}, 400
-        if user_data['email']:
-            return {'error': 'Invalid email address'}, 400
-        if not re.fullmatch(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$',
-                            user_data['email']):
-            return {'error': 'Invalid email address'}, 400
         if not user_data['first_name']:
             return {'error': 'First name is required'}, 400
         if not user_data['last_name']:
