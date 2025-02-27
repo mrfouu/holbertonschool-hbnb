@@ -7,29 +7,30 @@ class HBnBFacade:
         self.review_repo = InMemoryRepository()
         self.amenity_repo = InMemoryRepository()
 
-    # Placeholder method for creating a user
-    def create_user(self, user_data):
-        # Logic will be implemented in later tasks
-        pass
-
-    # Placeholder method for fetching a place by ID
-    def get_place(self, place_id):
-        # Logic will be implemented in later tasks
-        pass
-    #amenities
-
     def create_amenity(self, amenity_data):
-        # Placeholder for logic to create an amenity
-        pass
+        name = amenity_data.get('name')
+        if not name or len(name) > 50:
+            raise ValueError("Amenity name is required and must be less than or equal to 50 characters.")
+
+        new_amenity = {'name': name}
+        return self.amenity_repo.create(new_amenity)
 
     def get_amenity(self, amenity_id):
-        # Placeholder for logic to retrieve an amenity by ID
-        pass
+        return self.amenity_repo.get_by_id(amenity_id)
 
     def get_all_amenities(self):
-        # Placeholder for logic to retrieve all amenities
-        pass
+        return self.amenity_repo.get_all()
 
     def update_amenity(self, amenity_id, amenity_data):
-    # Placeholder for logic to update an amenity
-        pass
+        name = amenity_data.get('name')
+        if not name or len(name) > 50:
+            raise ValueError("Amenity name is required and must be less than or equal to 50 characters.")
+
+        updated_amenity = self.amenity_repo.update(amenity_id, {'name': name})
+        if not updated_amenity:
+            raise ValueError(f"No amenity found with ID {amenity_id}.")
+        return updated_amenity
+
+    def delete_amenity(self, amenity_id):
+        return self.amenity_repo.delete(amenity_id)
+
