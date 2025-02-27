@@ -54,36 +54,36 @@ class HBnBFacade:
     def create_place(self, place_data):
         # Placeholder for logic to create a place-l "é "
         place = Place(**place_data)
-        place = self.place_repo.add(place_data)
+        self.place_repo.add(place)
         return place
 
 
     def update_place(self, place_id, place_data):
         # Placeholder for logic to update a place
         place = self.place_repo.get(place_id)
-        if not place:
-            return None
-        if 'name' in place_data:
-            place.name = place_data['name']
-        if 'description' in place_data:
-            place.description = place_data['description']
-        if 'owner_id' in place_data:
-            place.owner_id = place_data['owner_id']
-        if 'address' in place_data:
-            place.address = place_data['address']
-        if 'city' in place_data:
-            place.city = place_data['city']
-        return self.place_repo.update(place_id, place_data)
+        if place:
+            if 'title' in place_data:
+                place.title = place_data['title']
+            if 'description' in place_data:
+                place.description = place_data['description']
+            if 'price' in place_data:
+                place.price = place_data['price']
+            if 'latitude' in place_data:
+                place.latitude = place_data['latitude']
+            if 'longitude' in place_data:
+                place.longitude = place_data['longitude']
+            if 'owner_id' in place_data:
+                place.owner_id = place_data['owner_id']
+            if 'amenities' in place_data:
+                place.amenities = place_data['amenities']
+            self.place_repo.update(place_id, place_data)
+        return place
 
     #amenities
     def create_amenity(self, amenity_data):
         amenity = Amenity(**amenity_data)
-        name = amenity_data.get('name')
-        if not name or len(name) > 50:
-            raise ValueError("Amenity name is required and must be less than or equal to 50 characters.")
-
-        new_amenity = {'name': name}
-        return self.amenity_repo.add(new_amenity)
+        self.amenity_repo.add(amenity)
+        return amenity
 
     def get_amenity(self, amenity_id):
         return self.amenity_repo.get(amenity_id)
@@ -93,15 +93,11 @@ class HBnBFacade:
 
     def update_amenity(self, amenity_id, amenity_data):
         amenity = self.amenity_repo.get(amenity_id)
-        if not amenity:
-            raise ValueError(f"No amenity found with ID {amenity_id}.")
-
-        name = amenity_data.get('name')
-        if not name or len(name) > 50:
-            raise ValueError("Amenity name is required and must be less than or equal to 50 characters.")
-
-        amenity.name = name
-        return self.amenity_repo.update(amenity_id, amenity)
+        if amenity:
+            if 'name' in amenity_data:
+                amenity.name = amenity_data['name']
+            self.amenity_repo.update(amenity_id, amenity_data)
+        return amenity
 
     def create_review(self, review_data):
         review = Review(**review_data)
