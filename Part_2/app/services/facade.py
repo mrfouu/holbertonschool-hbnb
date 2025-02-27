@@ -29,9 +29,22 @@ class HBnBFacade:
     # Placeholder method for fetching a place by ID
     def get_place(self, place_id):
         # Logic will be implemented in later tasks
-        pass
-    # amenities
+        return self.place_repo.get_places(place_id)
 
+    def get_all_places(self):
+        # Logic will be implemented in later tasks
+        return self.place_repo.get_all_places()
+
+    def create_place(self, place_data):
+        # Placeholder for logic to create a place-l "é "
+        return self.place_repo.create_place(place_data)
+
+
+    def update_place(self, place_id, place_data):
+        # Placeholder for logic to update a place
+        return self.place_repo.update_place(place_id, place_data)
+
+    #amenities
     def create_amenity(self, amenity_data):
         # Placeholder for logic to create an amenity
         pass
