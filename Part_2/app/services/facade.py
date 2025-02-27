@@ -72,9 +72,6 @@ class HBnBFacade:
     def delete_amenity(self, amenity_id):
         return self.amenity_repo.delete(amenity_id)
 
-        # Placeholder for logic to update an amenity
-        pass
-
     def create_review(self, review_data):
         review = self.review_repo.add(review_data)
         return review
