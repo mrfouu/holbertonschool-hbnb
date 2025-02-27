@@ -70,7 +70,7 @@ class UserResource(Resource):
     def put(self, user_id):
         """Update a user's information"""
         user_data = api.payload
-        updated_user = facade.update_user(user_id)
+        updated_user = facade.update_user(user_id, user_data)
         if not updated_user:
             return {'error': 'User not found'}, 404
         return {'id': updated_user.id,
