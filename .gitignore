@@ -1,43 +1,54 @@
-# Python
+# Fichiers et dossiers liés aux environnements virtuels
+venv/
+.env/
+.venv/
+LoL/
+ENV/
 __pycache__/
-*.py[cod]
+*.pyc
 *.pyo
 *.pyd
 
-# Environnements virtuels
-venv/
-.env
+# Fichiers de configuration et de dépendances locales
+*.en
+.env.local
+*.ini
+*.cfg
+*.toml
+Pipfile
+Pipfile.lock
+poetry.lock
 
-# Fichiers de configuration sensibles
-*.env
-secrets.json
-config.yaml
-
-# Fichiers journaux
-*.log
+# Dossiers de logs et fichiers temporaires
 logs/
+*.log
+*.tmp
+*.swp
+*.swo
+*.bak
 
-# Éditeurs de texte
+# Fichiers générés par les IDE et éditeurs de texte
 .vscode/
 .idea/
-*.swp
+*.sublime-workspace
+*.sublime-project
 
-# Fichiers spécifiques à l'OS
-# macOS
+# Fichiers de système d'exploitation
 .DS_Store
-.AppleDouble
-.LSOverride
-
-# Windows
 Thumbs.db
 desktop.ini
 
-# Dépendances et bibliothèques
-node_modules/
-npm-debug.log
-package-lock.json
-yarn.lock
 
-# Autres
-*.bak
-*.tmp
+# Caches et fichiers temporaires de Python
+.pytest_cache/
+.tox/
+.coverage
+coverage.xml
+.hypothesis/
+.cache/
+
+# Fichiers liés aux tests
+test-results/
+nosetests.xml
+coverage/
+htmlcov/
