@@ -39,7 +39,7 @@ class HBnBFacade:
         if 'email' in user_data:
                 user.email = user_data['email']
 
-        self.user_repo.update(user, user_data)
+        self.user_repo.update(user_id, user_data)
         return user
 
     # Placeholder method for fetching a place by ID
