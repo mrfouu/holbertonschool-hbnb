@@ -1,8 +1,10 @@
 from flask_restx import Namespace, Resource, fields
-from app.services import facade
+from app.services.facade import HBnBFacade
 
 
 api = Namespace('reviews', description='Review operations')
+
+facade = HBnBFacade()
 
 # Define the review model for input validation and documentation
 review_model = api.model('Review', {
@@ -11,8 +13,6 @@ review_model = api.model('Review', {
     'user_id': fields.String(required=True, description='ID of the user'),
     'place_id': fields.String(required=True, description='ID of the place')
 })
-
-facade = facade.HBnBFacade()
 
 
 @api.route('/')
@@ -79,16 +79,6 @@ class ReviewResource(Resource):
                 'rating': updated_review.rating,
                 'user_id': updated_review.user_id,
                 'place_id': updated_review.place_id}, 200
-
-    @api.response(200, 'Review deleted successfully')
-    @api.response(404, 'Review not found')
-    def delete(self, review_id):
-        """Delete a review"""
-        success = facade.delete_review(review_id)
-        if not success:
-            return {'error': 'Review not found'}, 404
-        else:
-            return {'message': 'Review deleted successfully'}, 200
 
 
 @api.route('/places/<place_id>/reviews')
