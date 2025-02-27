@@ -28,7 +28,8 @@ class ReviewList(Resource):
             return {'message': 'Missing required fields'}, 400
 
         new_review = facade.create_review(review_data)
-        return {'id': new_review.id,
+        return {
+                'id': new_review.id,
                 'text': new_review.text,
                 'rating': new_review.rating,
                 'user_id': new_review.user_id,
@@ -37,12 +38,12 @@ class ReviewList(Resource):
     @api.response(200, 'List of reviews retrieved successfully')
     def get(self):
         """Retrieve a list of all reviews"""
-        review = facade.get_all_reviews()
+        reviews = facade.get_all_reviews()
         return {'reviews': [{'id': review.id,
                             'text': review.text,
                             'rating': review.rating,
                             'user_id': review.user_id,
-                            'place_id': review.place_id} for review in review]}, 200
+                            'place_id': review.place_id} for review in reviews]}, 200
 
 
 @api.route('/<review_id>')
@@ -90,9 +91,12 @@ class PlaceReviewList(Resource):
         place_reviews = facade.get_reviews_by_place(place_id)
         if not place_reviews:
             return {'error': 'Place not found'}, 404
-        return {'reviews': [{'id': review.id,
-                            'text': review.text,
-                            'rating': review.rating,
-                            'user_id': review.user_id,
-                            'place_id': review.place_id} for review in place_reviews
-                            ]}, 200
+        return [
+            {
+                'id': review.id,
+                'text': review.text,
+                'rating': review.rating,
+                'user_id': review.user_id,
+                'place_id': review.place_id
+            }for review in place_reviews
+                ], 200
