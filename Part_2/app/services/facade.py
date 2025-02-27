@@ -15,7 +15,7 @@ class HBnBFacade:
     def create_user(self, user_data):
         # Logic will be implemented in later tasks
         user = User(**user_data)
-        user = self.user_repo.add(user)
+        self.user_repo.add(user)
         return user
 
     def get_user(self, user_id):
@@ -36,7 +36,7 @@ class HBnBFacade:
             user.first_name = user_data['first_name']
         if 'last_name' in user_data:
             user.last_name = user_data['last_name']
-            if 'email' in user_data:
+        if 'email' in user_data:
                 user.email = user_data['email']
 
         self.user_repo.update(user, user_data)
