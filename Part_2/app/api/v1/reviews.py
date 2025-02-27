@@ -80,16 +80,6 @@ class ReviewResource(Resource):
                 'user_id': updated_review.user_id,
                 'place_id': updated_review.place_id}, 200
 
-    @api.response(200, 'Review deleted successfully')
-    @api.response(404, 'Review not found')
-    def delete(self, review_id):
-        """Delete a review"""
-        success = facade.delete_review(review_id)
-        if not success:
-            return {'error': 'Review not found'}, 404
-        else:
-            return {'message': 'Review deleted successfully'}, 200
-
 
 @api.route('/places/<place_id>/reviews')
 class PlaceReviewList(Resource):
