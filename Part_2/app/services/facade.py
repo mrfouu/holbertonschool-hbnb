@@ -14,6 +14,8 @@ class HBnBFacade:
 
     # Placeholder method for creating a user
     def create_user(self, user_data):
+        user = User(**user_data)
+        self.user_repo.add(user)
         # Logic will be implemented in later tasks
         user = User(**user_data)
         self.user_repo.add(user)
@@ -23,12 +25,19 @@ class HBnBFacade:
         return self.user_repo.get(user_id)
 
     def get_user_by_email(self, email):
+        return self.user_repo.get_by_email('email', email)
         return self.user_repo.get_by_attribute('email', email)
 
     def get_all_users(self):
         return self.user_repo.get_all()
 
     def update_user(self, user_id, user_data):
+        user = self.user_repo.get(user_id)
+        if not user:
+            return None
+        for key, value in user_data.items():
+            if hasattr(user, key):
+                setattr(user, key, value)
         # Logic will be implemented in later tasks
         user = self.user_repo.get(user_id)
         if not user:
