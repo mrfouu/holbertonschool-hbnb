@@ -9,7 +9,8 @@ facade = HBnBFacade()
 # Define the review model for input validation and documentation
 review_model = api.model('Review', {
     'text': fields.String(required=True, description='Text of the review'),
-    'rating': fields.Integer(required=True, description='Rating of the place (1-5)'),
+    'rating': fields.Integer(required=True,
+                             description='Rating of the place (1-5)'),
     'user_id': fields.String(required=True, description='ID of the user'),
     'place_id': fields.String(required=True, description='ID of the place')
 })
@@ -24,7 +25,12 @@ class ReviewList(Resource):
         """Register a new review"""
         review_data = api.payload
 
-        if ('user_id' not in review_data or 'place_id' not in review_data or 'rating' not in review_data or 'text' not in review_data):
+        if (
+            'user_id' not in review_data or
+            'place_id' not in review_data or
+            'rating' not in review_data or
+            'text' not in review_data
+        ):
             return {'message': 'Missing required fields'}, 400
 
         new_review = facade.create_review(review_data)
@@ -39,11 +45,17 @@ class ReviewList(Resource):
     def get(self):
         """Retrieve a list of all reviews"""
         reviews = facade.get_all_reviews()
-        return {'reviews': [{'id': review.id,
-                            'text': review.text,
-                            'rating': review.rating,
-                            'user_id': review.user_id,
-                            'place_id': review.place_id} for review in reviews]}, 200
+        return {
+            'reviews': [
+                {
+                    'id': review.id,
+                    'text': review.text,
+                    'rating': review.rating,
+                    'user_id': review.user_id,
+                    'place_id': review.place_id
+                    } for review in reviews
+                ]
+            }, 200
 
 
 @api.route('/<review_id>')
@@ -71,7 +83,12 @@ class ReviewResource(Resource):
         review = facade.get_review(review_id)
         if not review:
             return {'error': 'Review not found'}, 404
-        if ('user_id' not in review_data or 'place_id' not in review_data or 'rating' not in review_data or 'text' not in review_data):
+        if (
+            'user_id' not in review_data or
+            'place_id' not in review_data or
+            'rating' not in review_data or
+            'text' not in review_data
+        ):
             return {'message': 'Missing required fields'}, 400
 
         updated_review = facade.update_review(review_id, review_data)
