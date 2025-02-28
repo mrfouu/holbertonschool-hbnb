@@ -18,23 +18,21 @@ class AmenityList(Resource):
     @api.response(400, 'Invalid input data')
     def post(self):
         """Register a new amenity"""
-        data_ameneties = api.payload
-        if not data_ameneties:
+        data_amenities = api.payload
+        if not data_amenities:
             return {'message': 'Invalid input data'}, 400
 
-        new_amenities = facade.create_amenity(data_ameneties)
+        new_amenities = facade.create_amenity(data_amenities)
         return {'id': new_amenities.id, 'name': new_amenities.name}, 201
 
     @api.response(200, 'List of amenities retrieved successfully')
     def get(self):
         """Retrieve a list of all amenities"""
-        ameneties_list = facade.get_all_amenities()
-        if not ameneties_list:
-            return {'message': 'No amenities found'}, 200
-        return {'amenities': [{'id': amenity.id,
-                               'name': amenity.name}
-                              for amenity in ameneties_list
-                              ]}, 200
+        ameneties = facade.get_all_amenities()
+        return {'ameneties': [{'id': ameneties.id,
+                               'name': ameneties.name}
+                              for ameneties in ameneties
+                              }], 200
 
 
 @api.route('/<amenity_id>')
@@ -43,10 +41,10 @@ class AmenityResource(Resource):
     @api.response(404, 'Amenity not found')
     def get(self, amenity_id):
         """Get amenity details by ID"""
-        ameneties_data = facade.get_amenity(amenity_id)
-        if not ameneties_data:
+        amenities_data = facade.get_amenity(amenity_id)
+        if not amenities_data:
             return {'error': 'Amenity not found'}, 404
-        return {'id': ameneties_data.id, 'name': ameneties_data.name}, 200
+        return {'id': amenities_data.id, 'name': amenities_data.name}, 200
 
     @api.expect(amenity_model)
     @api.response(200, 'Amenity updated successfully')
