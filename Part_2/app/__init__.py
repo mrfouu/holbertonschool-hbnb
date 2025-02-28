@@ -14,7 +14,7 @@ from app.api.v1.amenities import api as amenities_ns
 
 def create_app():
     app = Flask(__name__)
-    api = Api(app, version='1.0', title='HBnB API', description='HBnB Application API', doc='/api/v1/')
+    api = Api(app, version='1.0', title='HBnB API', description='HBnB Application API', doc='/')
 
     # Placeholder for API namespaces (endpoints will be added later)
     
