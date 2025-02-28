@@ -25,17 +25,17 @@ class AmenityList(Resource):
         new_amenities = facade.create_amenity(data_amenities)
         return {'id': new_amenities.id, 'name': new_amenities.name}, 201
 
-    @api.response(200, 'List of amenities retrieved successfully')
-    def get(self):
+@api.response(200, 'List of amenities retrieved successfully')
+def get(self):
         """Retrieve a list of all amenities"""
         amenities = facade.get_all_amenities()
-        return {'ameneties': [{'id': amenities.id,
-                               'name': amenities.name}]
+        return {'amenities': [{'id': amenities.id,
+                               'name': amenities.name}
                               for amenities in amenities
-                              }, 200
+                              ]}, 200
 
 
-@api.route('/<amenity_id>')
+@api.route('/<amenities_id>')
 class AmenityResource(Resource):
     @api.response(200, 'Amenity details retrieved successfully')
     @api.response(404, 'Amenity not found')
