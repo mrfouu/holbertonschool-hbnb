@@ -37,11 +37,14 @@ class PlaceList(Resource):
     def post(self):
         """Register a new place"""
         place_data = api.payload
-
         if not place_data:
             return {'message': 'Invalid input data'}, 400
 
-        new_place = facade.create_place(place_data)
+        try:
+            new_place = facade.create_place(place_data)
+        except (TypeError, ValueError) as e:
+            return {'error': str(e)}, 400
+        
         return {
                     "id": new_place.id,
                     "title": new_place.title,

@@ -32,8 +32,11 @@ class ReviewList(Resource):
             'text' not in review_data
         ):
             return {'message': 'Missing required fields'}, 400
-
-        new_review = facade.create_review(review_data)
+        try:
+            new_review = facade.create_review(review_data)
+        except (TypeError, ValueError) as e:
+            return {'error': str(e)}, 400
+        
         return {
                 'id': new_review.id,
                 'text': new_review.text,
@@ -80,7 +83,12 @@ class ReviewResource(Resource):
     def put(self, review_id):
         """Update a review's information"""
         review_data = api.payload
-        review = facade.get_review(review_id)
+        print("tchao")
+        try:
+            review = facade.get_review(review_id)
+        except (TypeError, ValueError) as e:
+            return {'error': str(e)}, 400
+        
         if not review:
             return {'error': 'Review not found'}, 404
         if (
@@ -90,8 +98,11 @@ class ReviewResource(Resource):
             'text' not in review_data
         ):
             return {'message': 'Missing required fields'}, 400
-
-        updated_review = facade.update_review(review_id, review_data)
+        try:
+            updated_review = facade.update_review(review_id, review_data)
+        except (TypeError, ValueError) as e:
+            return {'error': str(e)}, 400
+        print("coucou2")
         return {'id': updated_review.id,
                 'text': updated_review.text,
                 'rating': updated_review.rating,

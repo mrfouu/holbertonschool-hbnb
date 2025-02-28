@@ -11,6 +11,7 @@ class User(BaseModel):
         self.last_name = last_name
         self.email = email
         self.is_admin = is_admin
+        self.validate()
 
     @property
     def first_name(self):
@@ -68,3 +69,26 @@ class User(BaseModel):
             'last_name': self.last_name,
             'email': self.email,
         }
+        
+    def validate(self):
+        if self._first_name is None or not isinstance(self._first_name, str):
+            raise TypeError('first_name must be a non-empty string')
+        if not self._first_name or len(self._first_name) > 50:
+            raise ValueError(
+                'first_name must be non-empty and 50 characters or less')
+
+        if self.last_name is None or not isinstance(self.last_name, str):
+            raise TypeError('last_name must be a non-empty string')
+        if not self.last_name or len(self.last_name) > 50:
+            raise ValueError(
+                'last_name must be non-empty and 50 characters or less')
+            
+        if self._email is None or not isinstance(self._email, str):
+            raise TypeError('email must be a non-empty string')
+        if not re.fullmatch(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$',
+                            self._email):
+            raise ValueError('please enter a valid email address')
+        
+        if not isinstance(self._is_admin, bool):
+            raise TypeError('user must be an admin')
+        return
