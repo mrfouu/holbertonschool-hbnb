@@ -28,11 +28,13 @@ class AmenityList(Resource):
     @api.response(200, 'List of amenities retrieved successfully')
     def get(self):
         """Retrieve a list of all amenities"""
-        ameneties = facade.get_all_amenities()
-        return {'ameneties': [{'id': ameneties.id,
-                               'name': ameneties.name}
-                              for ameneties in ameneties
-                              }], 200
+        ameneties_list = facade.get_all_amenities()
+        if not ameneties_list:
+            return {'message': 'No amenities found'}, 200
+        return {'amenities': [{'id': amenity.id,
+                               'name': amenity.name}
+                              for amenity in ameneties_list
+                              ]}, 200
 
 
 @api.route('/<amenity_id>')
