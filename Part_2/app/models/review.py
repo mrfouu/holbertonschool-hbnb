@@ -19,6 +19,7 @@ class Review(BaseModel):
         self._user_id = user_id
         self._text = text
         self._rating = rating
+        self.validate()
 
     @property
     def place_id(self):
@@ -122,3 +123,21 @@ class Review(BaseModel):
         if value < 0 or value > 5:
             raise ValueError('rating must be between 0 and 5')
         self._rating = value
+        
+    def validate(self):
+        
+        if self._rating is None or not isinstance(self._rating, int):
+            raise TypeError('rating must be an integer')
+        if self._rating < 0 or self._rating > 5:
+            raise ValueError('rating must be between 0 and 5')
+        
+        if self._text == "" or not isinstance(self._text, str):
+            raise TypeError('text must be a non-empty string')
+        
+        if self._user_id == "" or not isinstance(self._user_id, str):
+            raise TypeError('user_id must be a non-empty string')
+        
+        if self._place_id == "" or not isinstance(self._place_id, str):
+            raise TypeError('place_id must be a non-empty string')
+        
+        return
