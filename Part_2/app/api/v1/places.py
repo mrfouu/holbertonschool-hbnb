@@ -21,13 +21,18 @@ place_model = api.model('Place', {
     'title': fields.String(required=True, description='Title of the place'),
     'description': fields.String(description='Description of the place'),
     'price': fields.Float(required=True, description='Price per night'),
-    'latitude': fields.Float(required=True, description='Latitude of the place'),
-    'longitude': fields.Float(required=True, description='Longitude of the place'),
-    'owner_id': fields.String(required=True, description='ID of the owner'),
-    'amenities': fields.List(fields.String, required=True, description="List of amenities ID's")
+    'latitude': fields.Float(required=True,
+                             description='Latitude of the place'),
+    'longitude': fields.Float(required=True,
+                              description='Longitude of the place'),
+    'owner_id': fields.String(required=True,
+                              description='ID of the owner'),
+    'amenities': fields.List(fields.String, required=True,
+                             description="List of amenities ID's")
 })
 
 facade = HBnBFacade()
+
 
 @api.route('/')
 class PlaceList(Resource):
@@ -63,10 +68,12 @@ class PlaceList(Resource):
                             'latitude': place.latitude,
                             'longitude': place.longitude,
                             'owner_id': place.owner_id,
-                            'amenities': [{'id': amenity.id,
-                                        'name': amenity.name
+                            'amenities': [{
+                                'id': amenity.id,
+                                'name': amenity.name
                                         } for amenity in place._amenities],
                             } for place in places]}, 200
+
 
 @api.route('/<place_id>')
 class PlaceResource(Resource):
@@ -74,7 +81,8 @@ class PlaceResource(Resource):
     @api.response(404, 'Place not found')
     def get(self, place_id):
         """Get place details by ID"""
-        # Placeholder for the logic to retrieve a place by ID, including associated owner and amenities
+        # Placeholder for the logic to retrieve a place by ID,
+        # including associated owner and amenities
         place_data = facade.get_place(place_id)
 
         if not place_data:
@@ -97,10 +105,10 @@ class PlaceResource(Resource):
     def put(self, place_id):
         """Update a place's information"""
         place_data = api.payload
-        
+
         if not place_data:
             return {'message': 'Invalid input data'}, 400
-        
+
         updated_place = facade.update_place(place_id, place_data)
 
         if not updated_place:

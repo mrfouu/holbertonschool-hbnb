@@ -4,9 +4,9 @@ from app.models.base_model import BaseModel
 from .user import User
 
 
-
 class Place(BaseModel):
-    def __init__(self, title, description, price, latitude, longitude, owner_id):
+    def __init__(self, title, description, price,
+                 latitude, longitude, owner_id):
         super().__init__()
         self._title = title
         self._description = description
