@@ -25,7 +25,7 @@ class HBnBFacade:
         return self.user_repo.get(user_id)
 
     def get_user_by_email(self, email):
-        return self.user_repo.get_by_email('email', email)
+        #return self.user_repo.get_by_email('email', email)
         return self.user_repo.get_by_attribute('email', email)
 
     def get_all_users(self):
@@ -42,12 +42,21 @@ class HBnBFacade:
         user = self.user_repo.get(user_id)
         if not user:
             return None
+        user.validate()
         if 'first_name' in user_data:
             user.first_name = user_data['first_name']
+        else:
+            raise TypeError('first_name must be in payload') 
+        
         if 'last_name' in user_data:
             user.last_name = user_data['last_name']
+        else:
+            raise TypeError('last_name must be in payload')
+        
         if 'email' in user_data:
             user.email = user_data['email']
+        else:
+            raise TypeError('email must be in payload')
 
         self.user_repo.update(user_id, user_data)
         return user
