@@ -6,14 +6,14 @@ from .user import User
 
 
 class Place(BaseModel):
-    def __init__(self, title, description, price, latitude, longitude, owner):
+    def __init__(self, title, description, price, latitude, longitude, owner_id):
         super().__init__()
         self._title = title
         self._description = description
         self._price = price
         self._latitude = latitude
         self._longitude = longitude
-        self._owner = owner
+        self._owner_id = owner_id
         self._reviews = []  # List to store related reviews
         self._amenities = []  # List to store related amenities
 
@@ -76,14 +76,14 @@ class Place(BaseModel):
         self._longitude = value
 
     @property
-    def owner(self):
-        return self._owner
+    def owner_id(self):
+        return self._owner_id
 
-    @owner.setter
-    def owner(self, owner):
-        if owner is None or not isinstance(owner, User):
+    @owner_id.setter
+    def owner_id(self, owner_id):
+        if owner_id is None or not isinstance(owner_id, User):
             raise TypeError('owner must be an User')
-        self._owner = owner
+        self._owner_id = owner_id
 
     def add_review(self, review):
         """Add a review to the place."""

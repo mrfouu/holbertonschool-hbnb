@@ -4,8 +4,6 @@ from app.models.place import Place
 from app.models.review import Review
 from app.models.amenity import Amenity
 
-
-
 class HBnBFacade:
     def __init__(self):
         self.user_repo = InMemoryRepository()
@@ -18,7 +16,8 @@ class HBnBFacade:
         user = User(**user_data)
         self.user_repo.add(user)
         # Logic will be implemented in later tasks
-        user = self.user_repo.add(user_data)
+        user = User(**user_data)
+        self.user_repo.add(user)
         return user
 
     def get_user(self, user_id):
@@ -26,6 +25,7 @@ class HBnBFacade:
 
     def get_user_by_email(self, email):
         return self.user_repo.get_by_email('email', email)
+        return self.user_repo.get_by_attribute('email', email)
 
     def get_all_users(self):
         return self.user_repo.get_all()
@@ -38,67 +38,79 @@ class HBnBFacade:
             if hasattr(user, key):
                 setattr(user, key, value)
         # Logic will be implemented in later tasks
-        user = self.user_repo.update(user_id)
+        user = self.user_repo.get(user_id)
         if not user:
             return None
         if 'first_name' in user_data:
             user.first_name = user_data['first_name']
         if 'last_name' in user_data:
             user.last_name = user_data['last_name']
-            if 'email' in user_data:
+        if 'email' in user_data:
                 user.email = user_data['email']
 
-        self.user_repo.update(user_id, user)
+        self.user_repo.update(user_id, user_data)
         return user
 
     # Placeholder method for fetching a place by ID
     def get_place(self, place_id):
         # Logic will be implemented in later tasks
-        return self.place_repo.get_places(place_id)
+        return self.place_repo.get(place_id)
 
     def get_all_places(self):
         # Logic will be implemented in later tasks
-        return self.place_repo.get_all_places()
+        return self.place_repo.get_all()
 
     def create_place(self, place_data):
         # Placeholder for logic to create a place-l "é "
-        return self.place_repo.create_place(place_data)
+        place = Place(**place_data)
+        self.place_repo.add(place)
+        return place
 
 
     def update_place(self, place_id, place_data):
         # Placeholder for logic to update a place
-        return self.place_repo.update_place(place_id, place_data)
+        place = self.place_repo.get(place_id)
+        if place:
+            if 'title' in place_data:
+                place.title = place_data['title']
+            if 'description' in place_data:
+                place.description = place_data['description']
+            if 'price' in place_data:
+                place.price = place_data['price']
+            if 'latitude' in place_data:
+                place.latitude = place_data['latitude']
+            if 'longitude' in place_data:
+                place.longitude = place_data['longitude']
+            if 'owner_id' in place_data:
+                place.owner_id = place_data['owner_id']
+            if 'amenities' in place_data:
+                place.amenities = place_data['amenities']
+            self.place_repo.update(place_id, place_data)
+        return place
 
     #amenities
     def create_amenity(self, amenity_data):
-        name = amenity_data.get('name')
-        if not name or len(name) > 50:
-            raise ValueError("Amenity name is required and must be less than or equal to 50 characters.")
-
-        new_amenity = {'name': name}
-        return self.amenity_repo.create(new_amenity)
+        amenity = Amenity(**amenity_data)
+        self.amenity_repo.add(amenity)
+        return amenity
 
     def get_amenity(self, amenity_id):
-        return self.amenity_repo.get_by_id(amenity_id)
+        return self.amenity_repo.get(amenity_id)
 
     def get_all_amenities(self):
         return self.amenity_repo.get_all()
 
     def update_amenity(self, amenity_id, amenity_data):
-        name = amenity_data.get('name')
-        if not name or len(name) > 50:
-            raise ValueError("Amenity name is required and must be less than or equal to 50 characters.")
-
-        updated_amenity = self.amenity_repo.update(amenity_id, {'name': name})
-        if not updated_amenity:
-            raise ValueError(f"No amenity found with ID {amenity_id}.")
-        return updated_amenity
-
-    def delete_amenity(self, amenity_id):
-        return self.amenity_repo.delete(amenity_id)
+        amenity = self.amenity_repo.get(amenity_id)
+        if amenity:
+            if 'name' in amenity_data:
+                amenity.name = amenity_data['name']
+            self.amenity_repo.update(amenity_id, amenity_data)
+        return amenity
 
     def create_review(self, review_data):
-        review = self.review_repo.add(review_data)
+        review = Review(**review_data)
+        self.review_repo.add(review)
         return review
 
     def get_review(self, review_id):
@@ -108,10 +120,12 @@ class HBnBFacade:
         return self.review_repo.get_all()
 
     def get_reviews_by_place(self, place_id):
-        return self.review_repo.get_by_place(place_id)
+        return [review for review in self.review_repo.get_all() if review.place_id == place_id]
 
     def update_review(self, review_id, review_data):
-        review = self.review_repo.update(review_id, review_data)
+        review = self.review_repo.get(review_id)
+        if not review:
+            return None
 
         if 'rating' in review_data:
             review.rating = review_data['rating']
@@ -122,11 +136,5 @@ class HBnBFacade:
         if 'place_id' in review_data:
             review.place_id = review_data['place_id']
 
-    def delete_review(self, review_id):
-        review = self.review_repo.delete(review_id)
-
-        if review:
-            self.review_repo.delete(review_id)
-            return {'message': 'Review deleted successfully'}, 200
-        else:
-            return {'message': 'Review not found'}, 404
+        self.review_repo.update(review_id, review_data)
+        return review
