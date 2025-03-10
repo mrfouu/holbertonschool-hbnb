@@ -7,10 +7,10 @@ from app.models.amenity import Amenity
 
 class HBnBFacade:
     def __init__(self):
-        self.user_repo = InMemoryRepository(User)
-        self.place_repo = InMemoryRepository(Place)
-        self.review_repo = InMemoryRepository(Review)
-        self.amenity_repo = InMemoryRepository(Amenity)
+        self.user_repo = InMemoryRepository()
+        self.place_repo = InMemoryRepository()
+        self.review_repo = InMemoryRepository()
+        self.amenity_repo = InMemoryRepository()
 
     # Placeholder method for creating a user
     def create_user(self, user_data):
