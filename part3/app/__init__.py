@@ -1,11 +1,12 @@
-from flask import Flask 
+from flask import Flask
 from flask_restx import Api
 from app.services.facade import HBnBFacade
 from flask_jwt_extended import JWTManager
-
+from flask_bcrypt import Bcrypt
 
 facade = HBnBFacade()
 jwt = JWTManager()
+bcrypt = Bcrypt()
 
 def create_app(config_class="config.DevelopmentConfig"):
     app = Flask(__name__)
@@ -25,5 +26,6 @@ def create_app(config_class="config.DevelopmentConfig"):
     api.add_namespace(amenities_ns, path='/api/v1/amenities')
     
     jwt.init_app(app)
+    bcrypt.init_app(app)  # Initialiser Bcrypt dans l'application Flask
     
     return app
