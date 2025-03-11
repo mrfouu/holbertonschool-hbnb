@@ -1,7 +1,6 @@
 from flask import Flask 
 from flask_restx import Api
 from app.services.facade import HBnBFacade
-import config
 from flask_jwt_extended import JWTManager
 
 
