@@ -2,7 +2,10 @@
 
 from .base_model import BaseModel
 import re
-from app import bcrypt  # Importer l'instance Bcrypt initialisée
+from flask_bcrypt import Bcrypt
+
+bcrypt = Bcrypt()  # Utiliser une instance locale si nécessaire
+
 
 
 class User(BaseModel):
