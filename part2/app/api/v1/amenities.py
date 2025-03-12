@@ -19,7 +19,7 @@ class AmenityList(Resource):
     def post(self):
         """Register a new amenity"""
         data_amenities = api.payload
-        if not data_amenities:
+        if not data_amenities or 'name' not in data_amenities:
             return {'message': 'Invalid input data'}, 400
         try:
             new_amenities = facade.create_amenity(data_amenities)
@@ -38,7 +38,7 @@ class AmenityList(Resource):
                                 ]}, 200
 
 
-@api.route('/<amenities_id>')
+@api.route('/<amenity_id>')
 class AmenityResource(Resource):
     @api.response(200, 'Amenity details retrieved successfully')
     @api.response(404, 'Amenity not found')
@@ -57,7 +57,7 @@ class AmenityResource(Resource):
         """Update an amenity's information"""
         amenity_data = api.payload
 
-        if not amenity_data:
+        if not amenity_data or 'name' not in amenity_data:
             return {'message': 'Invalid input data'}, 400
 
         updated_amenity = facade.update_amenity(amenities_id, amenity_data)
