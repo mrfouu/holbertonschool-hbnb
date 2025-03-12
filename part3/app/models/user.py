@@ -2,18 +2,17 @@
 
 from .base_model import BaseModel
 import re
-from app import bcrypt  # Importer l'instance Bcrypt initialisée
+from app import db, bcrypt  # Importer l'instance Bcrypt initialisée
 
 
 class User(BaseModel):
-    def __init__(self, first_name, last_name, email, password=None, is_admin=False):
-        super().__init__()
-        self.first_name = first_name
-        self.last_name = last_name
-        self.email = email
-        self.password = password  # Stocke le mot de passe sous sa forme hachée
-        self.is_admin = is_admin
-        self.validate()
+    __tablename__ = 'users'
+
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(120), nullable=False, unique=True)
+    password = db.Column(db.String(128), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
 
     @property
     def first_name(self):
@@ -69,10 +68,10 @@ class User(BaseModel):
         return self._password
 
     @password.setter
-    def password(self, value):
+    def hash_password(self, password):
         """Hache le mot de passe avant de le stocker."""
-        if value is not None:
-            self._password = bcrypt.generate_password_hash(value).decode('utf-8')
+        if password is not None:
+            self._password = bcrypt.generate_password_hash(password).decode('utf-8')
         else:
             self._password = None
 
