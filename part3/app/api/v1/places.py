@@ -56,32 +56,27 @@ class PlaceList(Resource):
         except (TypeError, ValueError) as e:
             return {'error': str(e)}, 400
         
-        return {
-                    "id": new_place.id,
-                    "title": new_place.title,
-                    "description": new_place.description,
-                    "price": new_place.price,
-                    "latitude": new_place.latitude,
-                    "longitude": new_place.longitude,
-                    "owner_id": new_place.owner_id,
-                }, 201
+        return {"id": new_place.id,
+                "title": new_place.title,
+                "description": new_place.description,
+                "price": new_place.price,
+                "latitude": new_place.latitude,
+                "longitude": new_place.longitude,
+                "owner_id": new_place.owner_id,
+                "amenities": new_place._amenities}, 201
 
     @api.response(200, 'List of places retrieved successfully')
     def get(self):
         """Retrieve a list of all places"""
         places = facade.get_all_places()
-        return {'places': [{'id': place.id,
-                            'title': place.title,
-                            'description': place.description,
-                            'price': place.price,
-                            'latitude': place.latitude,
-                            'longitude': place.longitude,
-                            'owner_id': place.owner_id,
-                            'amenities': [{
-                                'id': amenity.id,
-                                'name': amenity.name
-                                        } for amenity in place._amenities],
-                            } for place in places]}, 200
+        return {'id': places.id,
+                'title': places.title,
+                'description': places.description,
+                'price': places.price,
+                'latitude': places.latitude,
+                'longitude': places.longitude,
+                'owner_id': places.owner_id,
+                'amenities': places.amenities}, 200
 
 
 @api.route('/<place_id>')
@@ -96,16 +91,14 @@ class PlaceResource(Resource):
 
         if not place_data:
             return {'error': 'Place not found'}, 404
-        return {
-                    "id": place_data.id,
-                    "title": place_data.title,
-                    "description": place_data.description,
-                    "price": place_data.price,
-                    "latitude": place_data.latitude,
-                    "longitude": place_data.longitude,
-                    "owner_id": place_data.owner_id,
-                    "amenities": place_data._amenities
-                }, 200
+        return {"id": place_data.id,
+                "title": place_data.title,
+                "description": place_data.description,
+                "price": place_data.price,
+                "latitude": place_data.latitude,
+                "longitude": place_data.longitude,
+                "owner_id": place_data.owner_id,
+                "amenities": place_data._amenities}, 200
 
     @api.expect(place_model)
     @api.response(200, 'Place updated successfully')
@@ -134,13 +127,11 @@ class PlaceResource(Resource):
 
         if not updated_place:
             return {'message': 'Place not found'}, 404
-        return {
-                    "id": updated_place.id,
-                    "title": updated_place.title,
-                    "description": updated_place.description,
-                    "price": updated_place.price,
-                    "latitude": updated_place.latitude,
-                    "longitude": updated_place.longitude,
-                    "owner_id": updated_place.owner_id,
-                    "amenities": updated_place._amenities
-                }, 200
+        return {"id": updated_place.id,
+                "title": updated_place.title,
+                "description": updated_place.description,
+                "price": updated_place.price,
+                "latitude": updated_place.latitude,
+                "longitude": updated_place.longitude,
+                "owner_id": updated_place.owner_id,
+                "amenities": updated_place._amenities}, 200
