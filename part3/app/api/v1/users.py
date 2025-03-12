@@ -92,6 +92,13 @@ class UserResource(Resource):
 
         # Extract password for optional update
         password = user_data.pop('password', None)
+        current_user = get_jwt_identity()
+
+        if current_user != user_id:
+            return {'error': 'Unauthorized action: Should be an user'}, 403
+
+        # Extract password for optional update
+        password = user_data.pop('password', None)
         try:
             updated_user = facade.update_user(user_id, user_data, password)
         except (TypeError, ValueError) as e:

@@ -4,7 +4,9 @@ from app.models.user import User
 from app.models.place import Place
 from app.models.review import Review
 from app.models.amenity import Amenity
-
+from app.models.user import User
+from app.persistence.repository import SQLAlchemyRepository
+from app.persistence.repository import UserRepository
 
 class HBnBFacade:
     def __init__(self):
@@ -12,12 +14,14 @@ class HBnBFacade:
         self.place_repo = InMemoryRepository()
         self.review_repo = InMemoryRepository()
         self.amenity_repo = InMemoryRepository()
+        self.user_repo = SQLAlchemyRepository(User)
+        self.user_repo = UserRepository()
 
     def create_user(self, user_data, password):
         """Create a new user with hashed password"""
         # Hash the password before saving
-        user_data['password_hash'] = generate_password_hash(password)
         user = User(**user_data)
+        user.hash_password(user_data['password'])
         self.user_repo.add(user)
         return user
 
