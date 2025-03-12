@@ -2,14 +2,16 @@
 
 from .base_model import BaseModel
 import re
+from app import bcrypt  # Importer l'instance Bcrypt initialisée
 
 
 class User(BaseModel):
-    def __init__(self, first_name, last_name, email, is_admin=False):
+    def __init__(self, first_name, last_name, email, password=None, is_admin=False):
         super().__init__()
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
+        self.password = password  # Stocke le mot de passe sous sa forme hachée
         self.is_admin = is_admin
         self.validate()
 
@@ -47,7 +49,7 @@ class User(BaseModel):
     def email(self, value):
         if value is None or not isinstance(value, str):
             raise TypeError('email must be a non-empty string')
-        if not re.fullmatch(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$',
+        if not re.fullmatch(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
                             value):
             raise ValueError('please enter a valid email address')
         self._email = value
@@ -62,14 +64,34 @@ class User(BaseModel):
             raise TypeError('user must be an admin')
         self._is_admin = value
 
+    @property
+    def password(self):
+        return self._password
+
+    @password.setter
+    def password(self, value):
+        """Hache le mot de passe avant de le stocker."""
+        if value is not None:
+            self._password = bcrypt.generate_password_hash(value).decode('utf-8')
+        else:
+            self._password = None
+
+    def verify_password(self, password):
+        """Vérifie si le mot de passe en clair correspond au hachage."""
+        if not self._password:
+            return False
+        return bcrypt.check_password_hash(self._password, password)
+
     def to_dict(self):
+        """Convertit l'utilisateur en dictionnaire sans inclure le mot de passe."""
         return {
             'id': self.id,
             'first_name': self.first_name,
             'last_name': self.last_name,
             'email': self.email,
+            'is_admin': self.is_admin,
         }
-        
+
     def validate(self):
         if self._first_name is None or not isinstance(self._first_name, str):
             raise TypeError('first_name must be a non-empty string')
@@ -85,10 +107,9 @@ class User(BaseModel):
             
         if self._email is None or not isinstance(self._email, str):
             raise TypeError('email must be a non-empty string')
-        if not re.fullmatch(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$',
+        if not re.fullmatch(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
                             self._email):
             raise ValueError('please enter a valid email address')
         
         if not isinstance(self._is_admin, bool):
             raise TypeError('user must be an admin')
-        return
