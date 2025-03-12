@@ -4,6 +4,8 @@ from app.models.user import User
 from app.models.place import Place
 from app.models.review import Review
 from app.models.amenity import Amenity
+from app.models.user import User
+from app.persistence.repository import SQLAlchemyRepository
 
 
 class HBnBFacade:
@@ -12,6 +14,7 @@ class HBnBFacade:
         self.place_repo = InMemoryRepository()
         self.review_repo = InMemoryRepository()
         self.amenity_repo = InMemoryRepository()
+        self.user_repo = SQLAlchemyRepository(User)
 
     def create_user(self, user_data, password):
         """Create a new user with hashed password"""

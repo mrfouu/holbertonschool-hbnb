@@ -1,4 +1,5 @@
 from flask_restx import Namespace, Resource, fields
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services.facade import HBnBFacade
 
 api = Namespace('places', description='Place operations')
@@ -39,11 +40,16 @@ class PlaceList(Resource):
     @api.expect(place_model)
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
+    @jwt_required()
     def post(self):
         """Register a new place"""
+
         place_data = api.payload
         if not place_data:
             return {'message': 'Invalid input data'}, 400
+        
+        current_user = get_jwt_identity()
+        place_data['owner_id'] = current_user['id']
 
         try:
             new_place = facade.create_place(place_data)
@@ -89,7 +95,7 @@ class PlaceResource(Resource):
         place_data = facade.get_place(place_id)
 
         if not place_data:
-            return {'message': 'Place not found'}, 404
+            return {'error': 'Place not found'}, 404
         return {
                     "id": place_data.id,
                     "title": place_data.title,
@@ -105,12 +111,24 @@ class PlaceResource(Resource):
     @api.response(200, 'Place updated successfully')
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
+    @api.response(403, 'Unauthorized action')
+    @jwt_required()
     def put(self, place_id):
         """Update a place's information"""
         place_data = api.payload
 
         if not place_data:
-            return {'message': 'Invalid input data'}, 400
+            return {'error': 'Invalid input place data'}, 400
+        
+        current_user = get_jwt_identity()
+        place = facade.get_place(place_id)
+        user_id = current_user.get('id')
+        admin = current_user.get('is_admin')
+
+        if place.owner_id != user_id:
+            return {'error': 'Unauthorized action : Cannot modify other user\'s places'}, 403
+        if not admin:
+            return {'error': 'Unauthorized action : Should be an admin'}, 403
 
         updated_place = facade.update_place(place_id, place_data)
 
