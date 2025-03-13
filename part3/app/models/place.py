@@ -2,7 +2,7 @@
 
 from app.models.base_model import BaseModel
 from .user import User
-from app import db, bcrypt
+from app import db
 
 
 class Place(BaseModel):

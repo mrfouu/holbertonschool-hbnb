@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from app.models.base_model import BaseModel
-from app import db, bcrypt
+from app import db
 
 
 class Review(BaseModel):
@@ -19,7 +19,7 @@ class Review(BaseModel):
     __tablename__ = 'reviews'
 
     id = db.Column(db.Integer, primary_key=True)
-    rating = db.Column(db.Integer(5), nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
     comment = db.Column(db.String, nullable=True)
     place_id = db.Column(db.Integer, db.ForeignKey('places.id'), nullable=False)
 
