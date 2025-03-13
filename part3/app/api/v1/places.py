@@ -53,6 +53,7 @@ class PlaceList(Resource):
 
         try:
             new_place = facade.create_place(place_data)
+            new_place.validate()
         except (TypeError, ValueError) as e:
             return {'error': str(e)}, 400
         
@@ -117,6 +118,7 @@ class PlaceResource(Resource):
         place = facade.get_place(place_id)
         user_id = current_user.get('id')
         admin = current_user.get('is_admin')
+        place.validate()
 
         if place.owner_id != user_id:
             return {'error': 'Unauthorized action : Cannot modify other user\'s places'}, 403
