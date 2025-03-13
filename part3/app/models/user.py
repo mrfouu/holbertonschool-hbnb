@@ -63,22 +63,16 @@ class User(BaseModel):
             raise TypeError('user must be an admin')
         self._is_admin = value
 
-    @property
-    def password(self):
-        return self._password
-
-    @password.setter
     def hash_password(self, password):
         """Hache le mot de passe avant de le stocker."""
-        if password is not None:
-            self._password = bcrypt.generate_password_hash(password).decode('utf-8')
-        else:
-            self._password = None
+        self._password = bcrypt.generate_password_hash(password).decode('utf-8')
 
     def verify_password(self, password):
         """Vérifie si le mot de passe en clair correspond au hachage."""
         if not self._password:
-            return False
+            raise ValueError('Password is not set')
+        if not password:
+            raise ValueError('Password is empty')
         return bcrypt.check_password_hash(self._password, password)
 
     def to_dict(self):
@@ -98,9 +92,9 @@ class User(BaseModel):
             raise ValueError(
                 'first_name must be non-empty and 50 characters or less')
 
-        if self.last_name is None or not isinstance(self.last_name, str):
+        if self._last_name is None or not isinstance(self._last_name, str):
             raise TypeError('last_name must be a non-empty string')
-        if not self.last_name or len(self.last_name) > 50:
+        if not self._last_name or len(self._last_name) > 50:
             raise ValueError(
                 'last_name must be non-empty and 50 characters or less')
             

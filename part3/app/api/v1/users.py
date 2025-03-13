@@ -29,7 +29,7 @@ user_response_model = api.model('UserResponse', {
 @api.route('/')
 class UserList(Resource):
     @api.expect(user_model)
-    @api.response(201, 'User successfully created', model=user_response_model)
+    @api.response(201, 'User successfully created')
     @api.response(400, 'Email already registered')
     @api.response(400, 'Invalid input data')
     def post(self):
@@ -44,6 +44,7 @@ class UserList(Resource):
             # Extract password for hashing
             password = user_data.pop('password')
             new_user = facade.create_user(user_data, password)
+            new_user.validate()
         except (TypeError, ValueError) as e:
             return {'error': str(e)}, 400
 
@@ -102,6 +103,7 @@ class UserResource(Resource):
         password = user_data.pop('password', None)
         try:
             updated_user = facade.update_user(user_id, user_data, password)
+            updated_user.validate()
         except (TypeError, ValueError) as e:
             return {'error': str(e)}, 400
 
