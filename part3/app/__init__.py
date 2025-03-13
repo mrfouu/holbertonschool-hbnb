@@ -24,7 +24,8 @@ def create_app(config_class="config.DevelopmentConfig"):
     api.add_namespace(places_ns, path='/api/v1/places')
     api.add_namespace(reviews_ns, path='/api/v1/reviews')
     api.add_namespace(amenities_ns, path='/api/v1/amenities')
-    
+
+    # Initialiser SQLAlchemy et JWT sans le dossier `instance`
     db.init_app(app)
     jwt.init_app(app)
     bcrypt.init_app(app)  # Initialiser Bcrypt dans l'application Flask
