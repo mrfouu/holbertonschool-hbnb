@@ -1,4 +1,5 @@
 from flask_restx import Namespace, Resource, fields
+from flask_jwt_extended import get_jwt_identity
 from app.services import facade
 
 api = Namespace('users', description='User related operations')
@@ -21,15 +22,19 @@ user_response_model = api.model('UserResponse', {
 @api.route('/')
 class UserList(Resource):
     @api.expect(user_model)
-    @api.response(201, 'User successfully created', model=user_response_model)
+    @api.response(201, 'User successfully created')
+    @api.response(400, 'Email already registered')
     @api.response(400, 'Invalid input data')
     def post(self):
         """Register a new user"""
         user_data = api.payload
         try:
-            existing_user = facade.get_user_by_email(user_data['email'])
-            if existing_user:
-                return {'error': 'Email already registered'}, 400
+            # Extract password for hashing
+            password = user_data.pop('password')
+            new_user = facade.create_user(user_data, password)
+            new_user.validate()
+        except (TypeError, ValueError) as e:
+            return {'error': str(e)}, 400
 
             new_user = facade.create_user(user_data)
             return {
@@ -55,7 +60,17 @@ class UserResource(Resource):
     def get(self, user_id):
         """Get user details by ID"""
         try:
-            user = facade.get_user(user_id)
-            return user.to_dict(), 200
-        except ValueError as e:
-            return {'error': str(e)}, 404
+            updated_user = facade.update_user(user_id, user_data, password)
+            updated_user.validate()
+        except (TypeError, ValueError) as e:
+            return {'error': str(e)}, 400
+
+        if not updated_user:
+            return {'error': 'User not found'}, 404
+
+        return {
+            'id': updated_user.id,
+            'first_name': updated_user.first_name,
+            'last_name': updated_user.last_name,
+            'email': updated_user.email
+        }, 200

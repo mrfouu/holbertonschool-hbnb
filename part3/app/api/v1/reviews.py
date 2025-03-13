@@ -82,9 +82,12 @@ class ReviewResource(Resource):
     @api.response(404, 'Review not found')
     def get(self, review_id):
         """Get review details by ID"""
-        review = facade.get_review(review_id)
-        if not review:
-            return {'error': 'Review not found'}, 404
+        try:
+            review = facade.get_review(review_id)
+            review.validate()
+        except (TypeError, ValueError) as e:
+            return {'error': str(e)}, 400
+
         return {'id': review.id,
                 'text': review.text,
                 'rating': review.rating,
@@ -107,6 +110,7 @@ class ReviewResource(Resource):
 
         try:
             review = facade.get_review(review_id)
+            review.validate()
         except (TypeError, ValueError) as e:
             return {'error': str(e)}, 400
         
@@ -121,6 +125,7 @@ class ReviewResource(Resource):
             return {'message': 'Missing required fields'}, 400
         try:
             updated_review = facade.update_review(review_id, review_data)
+            updated_review.validate()
         except (TypeError, ValueError) as e:
             return {'error': str(e)}, 400
         print("coucou2")
@@ -139,6 +144,7 @@ class ReviewResource(Resource):
         current_user = get_jwt_identity()
 
         review = facade.get_review(review_id)
+        review.validate()
         if not review:
             return {'error': 'Review not found'}, 404
 
