@@ -2,21 +2,18 @@
 
 from app.models.base_model import BaseModel
 from .user import User
+from app import db, bcrypt
 
 
 class Place(BaseModel):
-    def __init__(self, title, description, price,
-                 latitude, longitude, owner_id):
-        super().__init__()
-        self._title = title
-        self._description = description
-        self._price = price
-        self._latitude = latitude
-        self._longitude = longitude
-        self._owner_id = owner_id
-        self._reviews = []  # List to store related reviews
-        self._amenities = []  # List to store related amenities
-        self.validate()
+    __tablename__ = 'places'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String, nullable=True)
+    price = db.Column(db.Float, nullable=False)
+    latitude = db.Column(db.Float, nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
 
     @property
     def title(self):

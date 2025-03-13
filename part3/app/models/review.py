@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from app.models.base_model import BaseModel
+from app import db, bcrypt
 
 
 class Review(BaseModel):
@@ -14,12 +15,13 @@ class Review(BaseModel):
             text (str): The text content of the review.
             rating (int): The rating of the review.
         """
-        super().__init__()
-        self._place_id = place_id
-        self._user_id = user_id
-        self._text = text
-        self._rating = rating
-        self.validate()
+
+    __tablename__ = 'reviews'
+
+    id = db.Column(db.Integer, primary_key=True)
+    rating = db.Column(db.Integer(5), nullable=False)
+    comment = db.Column(db.String, nullable=True)
+    place_id = db.Column(db.Integer, db.ForeignKey('places.id'), nullable=False)
 
     @property
     def place_id(self):
