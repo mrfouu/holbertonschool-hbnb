@@ -6,6 +6,7 @@ from app.models.review import Review
 from app.models.amenity import Amenity
 from app.models.user import User
 from app.persistence.repository import SQLAlchemyRepository
+from app import bcrypt, db
 
 class HBnBFacade:
     def __init__(self):
@@ -14,10 +15,11 @@ class HBnBFacade:
         self.review_repo = SQLAlchemyRepository(Review)
         self.amenity_repo = SQLAlchemyRepository(Amenity)
 
-    def create_user(self, user_data, password):
+    def create_user(self, user_data):
         """Create a new user with hashed password"""
         # Hash the password before saving
         user = User(**user_data)
+        
         user.hash_password(user_data['password'])
         self.user_repo.add(user)
         return user
@@ -30,36 +32,20 @@ class HBnBFacade:
         """Retrieve a user by email"""
         return self.user_repo.get_by_attribute('email', email)
 
+    def get_user_by_id(self, user_id):
+        """Retrieve a user by ID"""
+        return self.user_repo.get(user_id)
+
     def get_all_users(self):
         """Retrieve all users"""
         return self.user_repo.get_all()
 
-    def update_user(self, user_id, user_data, password=None):
-        """Update user data, including password if provided"""
+    def update_user(self, user_id, user_data):
+        """Update a user's details"""
         user = self.user_repo.get(user_id)
-        if not user:
-            return None
-
-        # Update user fields
-        for key, value in user_data.items():
-            if hasattr(user, key):
-                setattr(user, key, value)
-
-        # Update password if provided
-        if password:
-            user.password_hash(password)
-
-        # Validate updated user
-        user.validate()
-
-        # Save updated user to the repository
-        self.user_repo.update(user_id, vars(user))
-        return user
-
-    def verify_password(self, email, password):
-        """Verify a user's password given their email"""
-        user = self.get_user_by_email(email)
-        if user and check_password_hash(user.password_hash, password):
+        if user:
+            user_data['password'] = bcrypt.generate_password_hash(user_data['password'])
+            self.user_repo.update(user_id, user_data)
             return user
         return None
 
@@ -134,3 +120,7 @@ class HBnBFacade:
 
         self.review_repo.update(review_id, vars(review))
         return review
+    
+    def delete_review(self, review_id):
+        self.review_repo.delete(review_id)
+        return {'message': 'Review deleted successfully'}, 200
