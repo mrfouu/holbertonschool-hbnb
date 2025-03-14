@@ -6,16 +6,13 @@ from app.models.review import Review
 from app.models.amenity import Amenity
 from app.models.user import User
 from app.persistence.repository import SQLAlchemyRepository
-from app.persistence.repository import UserRepository
 
 class HBnBFacade:
     def __init__(self):
-        self.user_repo = InMemoryRepository()
-        self.place_repo = InMemoryRepository()
-        self.review_repo = InMemoryRepository()
-        self.amenity_repo = InMemoryRepository()
         self.user_repo = SQLAlchemyRepository(User)
-        self.user_repo = UserRepository()
+        self.place_repo = SQLAlchemyRepository(Place)
+        self.review_repo = SQLAlchemyRepository(Review)
+        self.amenity_repo = SQLAlchemyRepository(Amenity)
 
     def create_user(self, user_data, password):
         """Create a new user with hashed password"""
@@ -50,7 +47,7 @@ class HBnBFacade:
 
         # Update password if provided
         if password:
-            user.password_hash = generate_password_hash(password)
+            user.password_hash(password)
 
         # Validate updated user
         user.validate()

@@ -4,6 +4,8 @@ from app.services.facade import HBnBFacade
 
 api = Namespace('places', description='Place operations')
 
+facade = HBnBFacade()
+
 # Define the models for related entities
 amenity_model = api.model('PlaceAmenity', {
     'id': fields.String(description='Amenity ID'),
@@ -31,8 +33,6 @@ place_model = api.model('Place', {
     'amenities': fields.List(fields.String, required=True,
                              description="List of amenities ID's")
 })
-
-facade = HBnBFacade()
 
 
 @api.route('/')

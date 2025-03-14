@@ -1,5 +1,6 @@
 from app.models.base_model import BaseModel
-from app import db, bcrypt
+from app import db
+import uuid
 
 # Table d'association pour la relation Many-to-Many
 place_amenity = db.Table('place_amenity',
@@ -10,9 +11,8 @@ place_amenity = db.Table('place_amenity',
 class Amenity(BaseModel):
     __tablename__ = 'amenities'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     name = db.Column(db.String(50), nullable=False)
-    description = db.Column(db.String, nullable=True)
 
     # Relation Many-to-Many avec Place
     places = db.relationship('Place', secondary=place_amenity, backref='amenities', lazy=True)

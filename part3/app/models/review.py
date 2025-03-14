@@ -1,7 +1,9 @@
 from app.models.base_model import BaseModel
-from app import db, bcrypt
+from app import db
+import uuid
 
 class Review(BaseModel):
+
     __tablename__ = 'reviews'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -69,4 +71,5 @@ class Review(BaseModel):
             raise TypeError('user_id must be a non-empty string')
 
         if self._place_id == "" or not isinstance(self._place_id, str):
+
             raise TypeError('place_id must be a non-empty string')
