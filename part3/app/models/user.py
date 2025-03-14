@@ -1,6 +1,6 @@
 from .base_model import BaseModel
 import re
-from app import db, bcrypt  # Importer l'instance Bcrypt initialisée
+from app import db, bcrypt
 
 class User(BaseModel):
     __tablename__ = 'users'
@@ -9,69 +9,22 @@ class User(BaseModel):
     last_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
-    is_admin = db.Column(db.Boolean, default=False)
+    is_admin = db.Column(db.Boolean, default=True) # TODO : default=False
+    places = db.relationship('Place', back_populates='user', lazy=True)  # One-to-Many avec Place
+    reviews = db.relationship('Review', back_populates='user', lazy=True)  # One-to-Many avec Review
 
-    # Relations
-    places = db.relationship('Place', backref='user', lazy=True)  # One-to-Many avec Place
-    reviews = db.relationship('Review', backref='user', lazy=True)  # One-to-Many avec Review
-
-    @property
-    def first_name(self):
-        return self._first_name
-
-    @first_name.setter
-    def first_name(self, value):
-        if value is None or not isinstance(value, str):
-            raise TypeError('first_name must be a non-empty string')
-        if not value or len(value) > 50:
-            raise ValueError('first_name must be non-empty and 50 characters or less')
-        self._first_name = value
-
-    @property
-    def last_name(self):
-        return self._last_name
-
-    @last_name.setter
-    def last_name(self, value):
-        if value is None or not isinstance(value, str):
-            raise TypeError('last_name must be a non-empty string')
-        if not value or len(value) > 50:
-            raise ValueError('last_name must be non-empty and 50 characters or less')
-        self._last_name = value
-
-    @property
-    def email(self):
-        return self._email
-
-    @email.setter
-    def email(self, value):
-        if value is None or not isinstance(value, str):
-            raise TypeError('email must be a non-empty string')
-        if not re.fullmatch(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', value):
-            raise ValueError('please enter a valid email address')
-        self._email = value
-
-    @property
-    def is_admin(self):
-        return self._is_admin
-
-    @is_admin.setter
-    def is_admin(self, value):
-        if not isinstance(value, bool):
-            raise TypeError('user must be an admin')
-        self._is_admin = value
 
     def hash_password(self, password):
         """Hache le mot de passe avant de le stocker."""
-        self._password = bcrypt.generate_password_hash(password).decode('utf-8')
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
 
     def verify_password(self, password):
         """Vérifie si le mot de passe en clair correspond au hachage."""
-        if not self._password:
+        if not self.password:
             raise ValueError('Password is not set')
         if not password:
             raise ValueError('Password is empty')
-        return bcrypt.check_password_hash(self._password, password)
+        return bcrypt.check_password_hash(self.password, password)
 
     def to_dict(self):
         """Convertit l'utilisateur en dictionnaire sans inclure le mot de passe."""
@@ -84,20 +37,20 @@ class User(BaseModel):
         }
 
     def validate(self):
-        if self._first_name is None or not isinstance(self._first_name, str):
+        if self.first_name is None or not isinstance(self.first_name, str):
             raise TypeError('first_name must be a non-empty string')
-        if not self._first_name or len(self._first_name) > 50:
+        if not self.first_name or len(self.first_name) > 50:
             raise ValueError('first_name must be non-empty and 50 characters or less')
 
-        if self._last_name is None or not isinstance(self._last_name, str):
+        if self.last_name is None or not isinstance(self.last_name, str):
             raise TypeError('last_name must be a non-empty string')
-        if not self._last_name or len(self._last_name) > 50:
+        if not self.last_name or len(self.last_name) > 50:
             raise ValueError('last_name must be non-empty and 50 characters or less')
 
-        if self._email is None or not isinstance(self._email, str):
+        if self.email is None or not isinstance(self.email, str):
             raise TypeError('email must be a non-empty string')
-        if not re.fullmatch(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', self._email):
+        if not re.fullmatch(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', self.email):
             raise ValueError('please enter a valid email address')
 
-        if not isinstance(self._is_admin, bool):
+        if not isinstance(self.is_admin, bool):
             raise TypeError('user must be an admin')
