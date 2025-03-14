@@ -5,7 +5,6 @@ from .user import User
 from app import db
 import uuid
 
-
 class Place(BaseModel):
     __tablename__ = 'places'
 
@@ -15,6 +14,11 @@ class Place(BaseModel):
     price = db.Column(db.Float, unique=True)
     latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
+    user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)  # Clé étrangère vers User
+
+    # Relations
+    reviews = db.relationship('Review', backref='place', lazy=True)  # One-to-Many avec Review
+    amenities = db.relationship('Amenity', secondary='place_amenity', backref='places', lazy=True)  # Many-to-Many avec Amenity
 
     @property
     def title(self):
@@ -25,7 +29,7 @@ class Place(BaseModel):
         if value is None or not isinstance(value, str):
             raise TypeError('title must be a non-empty string')
         if not value or len(value) > 100:
-            raise ValueError('title must 100 characters or less')
+            raise ValueError('title must be 100 characters or less')
         self._title = value
 
     @property
@@ -56,7 +60,6 @@ class Place(BaseModel):
 
     @latitude.setter
     def latitude(self, value):
-        print(value)
         if value is None or not isinstance(value, float):
             raise TypeError('latitude must be a float')
         if value < -90.0 or value > 90.0:
@@ -94,33 +97,30 @@ class Place(BaseModel):
         """Add an amenity to the place."""
         self._amenities.append(amenity)
         self.save()
-        
+
     def validate(self):
         if self._latitude is None or not isinstance(self._latitude, float):
             raise TypeError('latitude must be a float')
         if self._latitude < -90.0 or self._latitude > 90.0:
             raise ValueError('latitude must be between -90 and 90')
-        
+
         if self._longitude is None or not isinstance(self._longitude, float):
             raise TypeError('longitude must be a float')
         if self._longitude < -180.0 or self._longitude > 180.0:
             raise ValueError('longitude must be between -180 and 180')
-        
+
         if self._owner_id == "" or not isinstance(self._owner_id, str):
             raise TypeError('owner must be a string')
-        
+
         if self._price is None or not isinstance(self._price, float):
             raise TypeError('price must be a float')
         if self._price < 0:
             raise ValueError('price must be a positive float')
-        
+
         if self._description is None or not isinstance(self._description, str):
             raise TypeError('description must be a non-empty string')
-        
+
         if self._title is None or not isinstance(self._title, str):
             raise TypeError('title must be a non-empty string')
         if not self._title or len(self._title) > 100:
-            raise ValueError('title must 100 characters or less')
-        
-        
-        return
+            raise ValueError('title must be 100 characters or less')
