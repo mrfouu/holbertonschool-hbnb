@@ -28,6 +28,7 @@ class ReviewList(Resource):
         """Register a new review"""
         review_data = api.payload
         current_user = get_jwt_identity()
+        review_data['user_id'] = current_user['id']
 
         if (
             'user_id' not in review_data or
@@ -40,7 +41,7 @@ class ReviewList(Resource):
         place = facade.get_place(review_data['place_id'])
         existing_review = facade.get_reviews_by_place(review_data['place_id'])
 
-        if review_data['user_id'] != current_user['user_id']:
+        if review_data['user_id'] != current_user['id']:
             return {'error': 'Unauthorized action : Should be an user'}, 403
         if place.owner_id == current_user['id']:
             return {'error': 'Unauthorized action: Cannot review your own place'}, 403
