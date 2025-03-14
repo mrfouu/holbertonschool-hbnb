@@ -2,26 +2,27 @@
 
 from app.models.base_model import BaseModel
 from app import db
+import uuid
 
 
 class Review(BaseModel):
-    def __init__(self, place_id, user_id, text, rating):
-        """
-        Initialize a new Review instance.
-        
-        Args:
-            place_id (str): The ID of the place being reviewed.
-            user_id (str): The ID of the user writing the review.
-            text (str): The text content of the review.
-            rating (int): The rating of the review.
-        """
-
+    """
+    Initialize a new Review instance.
+    
+    Args:
+        place_id (str): The ID of the place being reviewed.
+        user_id (str): The ID of the user writing the review.
+        text (str): The text content of the review.
+        rating (int): The rating of the review.
+    """
     __tablename__ = 'reviews'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     rating = db.Column(db.Integer, nullable=False)
-    comment = db.Column(db.String, nullable=True)
-    place_id = db.Column(db.Integer, db.ForeignKey('places.id'), nullable=False)
+    text = db.Column(db.String, nullable=False)
+    place_id = db.Column(db.String(36), db.ForeignKey('places.id'), nullable=False)
+    user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
+
 
     @property
     def place_id(self):
