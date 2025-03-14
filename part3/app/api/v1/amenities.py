@@ -1,5 +1,6 @@
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import HBnBFacade
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 api = Namespace('amenities', description='Amenity operations')
 
@@ -16,8 +17,14 @@ class AmenityList(Resource):
     @api.expect(amenity_model)
     @api.response(201, 'Amenity successfully created')
     @api.response(400, 'Invalid input data')
+    @jwt_required()
     def post(self):
         """Register a new amenity"""
+        current_user = get_jwt_identity()
+
+        if not current_user.get('is_admin', False):
+            return {'error': 'Admin privileges required'}, 403
+        
         data_amenities = api.payload
         if not data_amenities:
             return {'message': 'Invalid input data'}, 400
@@ -50,15 +57,19 @@ class AmenityResource(Resource):
             return {'error': 'Amenity not found'}, 404
         return {'id': amenities_data.id, 'name': amenities_data.name}, 200
 
-
+    @jwt_required()
     @api.expect(amenity_model)
     @api.response(200, 'Amenity updated successfully')
     @api.response(404, 'Amenity not found')
     @api.response(400, 'Invalid input data')
     def put(self, amenities_id):
         """Update an amenity's information"""
+        current_user = get_jwt_identity()
+        
+        if not current_user.get('is_admin', False):
+            return {'error': 'Admin privileges required'}, 403
+        
         amenity_data = api.payload
-        amenity_data.validate()
 
         if not amenity_data:
             return {'message': 'Invalid input data'}, 400
