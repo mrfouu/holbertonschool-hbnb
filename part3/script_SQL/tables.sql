@@ -16,18 +16,19 @@ CREATE TABLE places (
     price DECIMAL(10, 2),
     latitude FLOAT,
     longitude FLOAT,
-    owner_id CHAR(36),
+    user_id CHAR(36),  -- Clé étrangère vers User
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 -- Table reviews
 CREATE TABLE reviews (
     id CHAR(36) PRIMARY KEY,
     text TEXT,
-    rating INT (rating BETWEEN 1 AND 5),
+    rating INT CHECK (rating BETWEEN 1 AND 5),
     user_id CHAR(36),
     place_id CHAR(36),
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (place_id) REFERENCES places(id)
+    FOREIGN KEY (place_id) REFERENCES places(id),
     CONSTRAINT user_unique_place_review UNIQUE (user_id, place_id)
 );
 
