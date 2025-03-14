@@ -94,7 +94,7 @@ class Review(BaseModel):
         """
         if value is None or not isinstance(value, str):
             raise TypeError('text must be a non-empty string')
-        self._text = value
+        self.com = value
 
     @property
     def rating(self):
