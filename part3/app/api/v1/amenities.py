@@ -23,6 +23,7 @@ class AmenityList(Resource):
             return {'message': 'Invalid input data'}, 400
         try:
             new_amenities = facade.create_amenity(data_amenities)
+            new_amenities.validate()
         except:
             return {'message': 'Invalid input data'}, 400
         
@@ -49,6 +50,7 @@ class AmenityResource(Resource):
             return {'error': 'Amenity not found'}, 404
         return {'id': amenities_data.id, 'name': amenities_data.name}, 200
 
+
     @api.expect(amenity_model)
     @api.response(200, 'Amenity updated successfully')
     @api.response(404, 'Amenity not found')
@@ -56,6 +58,7 @@ class AmenityResource(Resource):
     def put(self, amenities_id):
         """Update an amenity's information"""
         amenity_data = api.payload
+        amenity_data.validate()
 
         if not amenity_data:
             return {'message': 'Invalid input data'}, 400

@@ -48,7 +48,7 @@ CREATE TABLE reviews (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (place_id) REFERENCES places(id)
+    FOREIGN KEY (place_id) REFERENCES places(id),
     CONSTRAINT user_unique_place_review UNIQUE (user_id, place_id)
 );
 
