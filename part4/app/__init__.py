@@ -3,7 +3,7 @@ from flask_restx import Api
 from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS  # ✅ Ajout
+from flask_cors import CORS
 
 jwt = JWTManager()
 bcrypt = Bcrypt()
@@ -19,7 +19,9 @@ def create_app(config_class="config.DevelopmentConfig"):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    app.url_map.strict_slashes = False  # ✅ pour éviter les soucis de slashs
+    app.url_map.strict_slashes = False
+   
+    CORS(app, resources={r"/api/*": {"origins": "http://localhost:8000"}}, supports_credentials=True)
 
     authorizations = {
         'token': {
@@ -46,9 +48,6 @@ def create_app(config_class="config.DevelopmentConfig"):
     api.add_namespace(places_ns, path='/api/v1/places')
     api.add_namespace(reviews_ns, path='/api/v1/reviews')
     api.add_namespace(amenities_ns, path='/api/v1/amenities')
-
-    # ✅ Ajoute CORS **après** les namespaces
-    CORS(app, resources={r"/api/*": {"origins": "http://localhost:8000"}}, supports_credentials=True)
 
     # Initialiser les extensions
     db.init_app(app)
