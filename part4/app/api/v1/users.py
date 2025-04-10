@@ -10,7 +10,8 @@ user_model = api.model('User', {
     'first_name': fields.String(required=True, description='First name of the user'),
     'last_name': fields.String(required=True, description='Last name of the user'),
     'email': fields.String(required=True, description='Email of the user'),
-    'password': fields.String(required=True, description='Password for the user')
+    'password': fields.String(required=True, description='Password for the user'),
+    'is_admin': fields.Boolean(description='Is the user an admin', deafault=False),
 })
 
 user_response_model = api.model('UserResponse', {
@@ -31,6 +32,8 @@ class UserList(Resource):
         """Register a new user"""
         
         user_data = api.payload
+        is_admin = user_data.get('is_admin', False)
+        user_data['is_admin'] = is_admin
     
         existing_user = facade.get_user_by_email(user_data['email'])
         if existing_user:

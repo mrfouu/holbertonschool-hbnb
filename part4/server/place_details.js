@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function fetchPlaceDetails(token, placeId) {
     try {
-      const response = await fetch(`http://localhost:5000/api/v1/places/${placeId}`, {
+      const response = await fetch(`http://localhost:5000/api/v1/places/`, {
         headers: token ? { 'Authorization': `Bearer ${token}` } : {}
       });
       if (!response.ok) throw new Error('Error fetching place details');
@@ -19,17 +19,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function displayPlaceDetails(place) {
     if (!placeDetailsSection || !reviewsSection) return;
-
+  
+    // Correction ici : je récupère proprement les noms ou ids des amenities
+    const amenitiesList = Array.isArray(place.amenities)
+      ? place.amenities.map(amenity => amenity.name || amenity.id).join(', ')
+      : 'No amenities listed';
+  
     placeDetailsSection.innerHTML = `
       <h1>${place.title}</h1>
       <p><strong>Host:</strong> ${place.owner_id}</p>
       <p><strong>Price per night:</strong> $${place.price}</p>
       <p><strong>Description:</strong> ${place.description}</p>
-      <p><strong>Amenities:</strong> ${place.amenities.join(', ') || 'No amenities listed'}</p>
+      <p><strong>Amenities:</strong> ${amenitiesList}</p>
     `;
-
+  
     reviewsSection.innerHTML = '<h2>Reviews</h2>';
-
+  
     if (place.reviews && place.reviews.length > 0) {
       place.reviews.forEach(review => {
         reviewsSection.innerHTML += `
@@ -44,22 +49,26 @@ document.addEventListener('DOMContentLoaded', async () => {
       reviewsSection.innerHTML += '<p>No reviews yet.</p>';
     }
   }
+  
 
   async function submitReview(token, placeId, reviewText, rating) {
     try {
       const response = await fetch(`http://localhost:5000/api/v1/reviews/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          text: reviewText, // ✅ corriger le champ
-          rating: parseInt(rating),
-          place_id: placeId,
-          user_id: getUserIdFromToken(token) // ✅ on ajoute user_id depuis le token
-        })
-      });
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+  },
+  credentials: 'include', // ✅ ajoute ceci pour les cookies / auth header
+  mode: 'cors', // ✅ ajoute le mode CORS
+  body: JSON.stringify({
+    text: reviewText,
+    rating: parseInt(rating),
+    place_id: placeId,
+    user_id: getUserIdFromToken(token)
+  })
+});
+
   
       if (response.ok) {
         alert('Review submitted successfully!');

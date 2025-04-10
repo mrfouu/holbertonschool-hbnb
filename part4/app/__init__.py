@@ -18,13 +18,13 @@ from app.api.v1.amenities import api as amenities_ns
 def create_app(config_class="config.DevelopmentConfig"):
     app = Flask(__name__)
     app.config.from_object(config_class)
-
     app.url_map.strict_slashes = False
-   
-    CORS(app, resources={r"/api/*": {"origins": "http://localhost:8000"}}, supports_credentials=True)
+
+    # Active Flask-CORS globalement pour toutes les routes
+    CORS(app)
 
     authorizations = {
-        'token': {
+        'BearerAuth': {
             'type': 'apiKey',
             'in': 'header',
             'name': 'Authorization',
@@ -54,7 +54,21 @@ def create_app(config_class="config.DevelopmentConfig"):
     jwt.init_app(app)
     bcrypt.init_app(app)
 
+    # Ajout explicite des en-têtes CORS sur chaque réponse
+    @app.after_request
+    def after_request(response):
+        # Nous définissons explicitement l'origine pour éviter le doublon
+        response.headers['Access-Control-Allow-Origin'] = 'http://localhost:8000'
+        response.headers['Access-Control-Allow-Credentials'] = 'true'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+        response.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
+        return response
+
     with app.app_context():
         db.create_all()
 
     return app
+
+if __name__ == '__main__':
+    app = create_app()
+    app.run(debug=True)
