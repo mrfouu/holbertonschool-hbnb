@@ -24,10 +24,10 @@ class ReviewList(Resource):
     def post(self):
         """Register a new review"""
         review_data = api.payload
-        current_user = get_jwt_identity()
+        current_user = get_jwt_identity()  # current_user est une chaîne (l'ID utilisateur)
 
         # Ajouter 'user_id' obtenu via le token dans le payload
-        review_data['user_id'] = current_user['id']
+        review_data['user_id'] = current_user
 
         # Vérifier que tous les champs obligatoires sont présents.
         if (
@@ -39,16 +39,15 @@ class ReviewList(Resource):
             return {'message': 'Missing required fields'}, 400
         
         place = facade.get_place(review_data['place_id'])
-        existing_review = facade.get_reviews_by_place(review_data['place_id'])
+        # Vérifie si cet utilisateur a déjà laissé une review pour ce lieu
+        reviews_for_place = facade.get_reviews_by_place(review_data['place_id'])
+        user_already_reviewed = any(r.user_id == review_data['user_id'] for r in reviews_for_place)
+        if user_already_reviewed:
+            return {'error': 'Unauthorized action: You have already reviewed this place'}, 403
 
-        # Vérifier qu'il ne s'agit pas d'une tentative de révision par autre utilisateur,
-        # ni que l'utilisateur ne souhaite pas noter sa propre location.
-        if review_data['user_id'] != current_user['id']:
-            return {'error': 'Unauthorized action: Should be an user'}, 403
-        if place and place.owner_id == current_user['id']:
+        # Vérifier qu'il ne s'agit pas d'une tentative de révision sur sa propre location.
+        if place and place.owner_id == current_user:
             return {'error': 'Unauthorized action: Cannot review your own place'}, 403
-        if existing_review:
-            return {'error': 'Unauthorized action: Cannot review the same place more than once'}, 403
 
         try:
             new_review = facade.create_review(review_data)
@@ -115,7 +114,7 @@ class ReviewResource(Resource):
         if not review:
             return {'error': 'Review not found'}, 404
 
-        if review.user_id != current_user['id']:
+        if review.user_id != current_user:
             return {'error': 'Unauthorized action: Cannot modify other user\'s review'}, 403
 
         if (
@@ -153,7 +152,7 @@ class ReviewResource(Resource):
             return {'error': 'Review not found'}, 404
 
         review.validate()
-        if review.user_id != current_user['id']:
+        if review.user_id != current_user:
             return {'error': 'Unauthorized action: Cannot delete other user\'s review'}, 403
 
         facade.delete_review(review_id)

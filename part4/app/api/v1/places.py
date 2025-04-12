@@ -1,5 +1,5 @@
 from flask_restx import Namespace, Resource, fields
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.services.facade import HBnBFacade
 
 api = Namespace('places', description='Place operations')
@@ -43,6 +43,7 @@ class PlaceList(Resource):
         if not place_data:
             return {'message': 'Invalid input data'}, 400
 
+        # Suppression de clés potentiellement présentes
         place_data.pop('owner_id', None)
         place_data.pop('user', None)
 
@@ -76,8 +77,13 @@ class PlaceList(Resource):
             "price": place.price,
             "latitude": place.latitude,
             "longitude": place.longitude,
-            "owner_id": place.owner_id,
+            "owner": {
+                "id": place.user.id if place.user else None,
+                "first_name": place.user.first_name if place.user else "",
+                "last_name": place.user.last_name if place.user else ""
+            },
             "amenities": [amenity.id for amenity in place.amenities]
+            # Dans la vue liste, on n'inclut pas les reviews.
         }
 
 @api.route('/<place_id>')
@@ -88,10 +94,8 @@ class PlaceResource(Resource):
     def get(self, place_id):
         """Get place details by ID"""
         place = facade.get_place(place_id)
-
         if not place:
             return {'error': 'Place not found'}, 404
-
         return self.serialize_place(place), 200
 
     @api.expect(place_model)
@@ -106,14 +110,15 @@ class PlaceResource(Resource):
         if not place_data:
             return {'error': 'Invalid input data'}, 400
 
-        current_user = get_jwt_identity()
+        current_user = get_jwt_identity()  # current_user est une chaîne
         place = facade.get_place(place_id)
-
         if not place:
             return {'message': 'Place not found'}, 404
 
-        user_id = current_user.get('id')
-        admin = current_user.get('is_admin')
+        # Pour accéder aux autres claims, on utilise get_jwt()
+        claims = get_jwt()
+        user_id = current_user  # already a string
+        admin = claims.get('is_admin', False)
 
         if place.owner_id != user_id and not admin:
             return {'error': 'Unauthorized action'}, 403
@@ -124,7 +129,6 @@ class PlaceResource(Resource):
         place_data['amenities'] = amenities
 
         updated_place = facade.update_place(place_id, place_data)
-
         return self.serialize_place(updated_place), 200
 
     def serialize_place(self, place):
@@ -135,6 +139,19 @@ class PlaceResource(Resource):
             "price": place.price,
             "latitude": place.latitude,
             "longitude": place.longitude,
-            "owner_id": place.owner_id,
-            "amenities": [amenity.id for amenity in place.amenities]
+            "owner": {
+                "id": place.user.id if place.user else None,
+                "first_name": place.user.first_name if place.user else "",
+                "last_name": place.user.last_name if place.user else ""
+            },
+            "amenities": [amenity.id for amenity in place.amenities],
+            "reviews": [
+                {
+                    "id": review.id,
+                    "text": review.text,
+                    "rating": review.rating,
+                    "user_id": review.user_id,
+                    "place_id": review.place_id
+                } for review in place.reviews
+            ]
         }
